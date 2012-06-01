@@ -1,0 +1,20 @@
+body {
+	background: #000;
+}
+
+canvas#gameCanvas{
+	outline: 0;
+	border: 1px solid #000;
+	width: 320px;
+	height: 480px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin: -240px 0 0 -160px;
+	background:#fff;
+}
+
+div#wrapper {
+	max-width: 100%;
+	overflow: hidden;
+}
