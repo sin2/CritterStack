@@ -17,6 +17,16 @@ var kcolumns = 9;
 var krows = 14;
 
 var background;
+var preload;
+var messageField;
+var stage;		
+var loadingInterval;
+var splash;
+var canvas;
+var button;
+var event1;
+
+var DEFAULT_FONT = "bold 24px HappyHell";
 
 function init() {
 	canvas = document.getElementById('canvas');
@@ -34,13 +44,10 @@ function StartMenu()
 function StartInstructions()
 {
 	start();
-	
-	
 	//DisplayInstructions(function(){start();});
 }
 
 function start() {
-	randomnumber=Math.floor(Math.random()*3);
 	bounds = new Rectangle();
 	bounds.width = canvas.width;
 	bounds.height = canvas.height;
@@ -101,8 +108,8 @@ function start() {
 
 function ChooseSprite()
 {
-	randomnumber++;
-	randomnumber = randomnumber%3;
+	
+	randomnumber=Math.floor(Math.random()*3);
 	if(randomnumber ==0)
 	{
 			// Define a spritesheet. Note that this data can be exported by Zoë.
@@ -249,6 +256,7 @@ document.onkeydown = function(evt) {
 
   if(evt.keyCode == 32){
   	placeTile();
+	SoundJS.play("audio-critter");
   	//TODO: check tower
   }
 };
