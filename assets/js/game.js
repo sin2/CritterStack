@@ -17,10 +17,15 @@ function init() {
 			StartMenu();
 			});
 }
+
 function StartMenu()
 {
-	DisplayMenu();
-	
+	DisplayMenu(function(){StartInstructions();});
+}
+
+function StartInstructions()
+{
+	DisplayInstructions(function(){start();});
 }
 
 function start() {
