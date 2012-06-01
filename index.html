@@ -14,9 +14,39 @@
 	<script type="text/javascript" src="assets/js/easeljs-0.4.2.min.js"></script>
 	<script type="text/javascript" src="assets/js/preloadjs-0.1.0.min.js"></script>
 	<script type="text/javascript" src="assets/js/soundjs-0.2.0.min.js"></script>
+    <script type="text/javascript" src="assets/js/preload.js"></script>
+    <script type="text/javascript" src="assets/js/menu.js"></script>
 	<script type="text/javascript" src="assets/js/game.js"></script>
+    <script>
+	var canvas;
+	
+    function init() {
+		startPreload(function(){
+			StartMenu();
+			});
+	}
+	function StartMenu()
+	{
+		alert("HELLO");
+		}
+	
+    </script>
 </head>
 <body onLoad="init();">
-	<canvas id="canvas" width="320" height="480"></canvas>
+	<canvas  id="gameCanvas" width="320" height="480"></canvas>
 </body>
 </html>
+ <style>  
+  body {   
+  }  
+   
+  canvas#gameCanvas{  
+    outline:0;  
+    border:1px solid #000; 
+  }  
+  
+div#wrapper {
+    max-width: 100%;
+    overflow:hidden;
+  }
+  </style>  
