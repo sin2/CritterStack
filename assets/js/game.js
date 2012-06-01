@@ -15,6 +15,16 @@ var kcolumns = 9;
 var krows = 14;
 
 var background;
+var preload;
+var messageField;
+var stage;		
+var loadingInterval;
+var splash;
+var canvas;
+var button;
+var event1;
+
+var DEFAULT_FONT = "bold 24px HappyHell";
 
 function init() {
 	canvas = document.getElementById('canvas');
@@ -104,6 +114,7 @@ document.onkeydown = function(evt) {
 
   if(evt.keyCode == 32){
   	placeTile();
+	SoundJS.play("audio-critter");
   	//TODO: check tower
   }
 };

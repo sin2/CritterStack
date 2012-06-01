@@ -1,12 +1,4 @@
-var preload;
-	var messageField;
-	var stage;		
-	var loadingInterval;
-	var splash;
-	var canvas;
-	var button;
-	var event1;
-	
+
 function DisplayMenu(startGame)
 {
 	event1 = startGame;
@@ -31,7 +23,7 @@ function DisplayInstructions(startGame)
 {
 		canvas = document.getElementById("canvas");
 		stage = new Stage(canvas);
-		messageField = new Text("Instructions Go Here", "bold 24px Arial", "#000000");
+		messageField = new Text("Instructions Go Here", DEFAULT_FONT, "#000000");
 		messageField.textAlign = "center";
 		messageField.x = canvas.width / 2;
 		messageField.y = canvas.height / 4*3;
