@@ -28,7 +28,7 @@
 		messageField.x = canvas.width / 2;
 		messageField.y = canvas.height / 4*3;
 		var img = new Image();
-		img.src = "assets/splash.png";
+		img.src = "assets/images/splash.png";
 		img.onload = function(e){
 			 splash = new Bitmap(e.target);
 			stage.addChild(splash, messageField);
