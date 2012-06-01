@@ -8,6 +8,8 @@ var towerLevel;
 var tower;
 var towerLast;
 var floorSize;
+var currColour;
+var randomnumber;
 
 var ktileSize = 30;
 var kborder = 25;
@@ -31,15 +33,25 @@ function StartMenu()
 
 function StartInstructions()
 {
-	DisplayInstructions(function(){start();});
+	start();
+	
+	
+	//DisplayInstructions(function(){start();});
 }
 
 function start() {
+	randomnumber=Math.floor(Math.random()*3);
 	bounds = new Rectangle();
 	bounds.width = canvas.width;
 	bounds.height = canvas.height;
 				
 	stage = new Stage(canvas);
+//	var img = new Image();
+//		img.src = "assets/images/back3.png";
+//			img.onload = function(e){
+//			splash = new Bitmap(e.target);
+//			stage.addChild(splash);
+			
 	
 	//background = new Image();
 	
@@ -55,7 +67,7 @@ function start() {
 	g.setStrokeStyle(1);
 	g.beginStroke(Graphics.getRGB(255,0,0,.7));
 	g.drawRect(0,0, ktileSize,ktileSize);
-	circle = new Shape(g);
+	circle = ChooseSprite();
 	circle.x = kborder;
 	circle.y = bounds.height - ktileSize*towerLevel;
 	//add the circle to the stage.
@@ -77,14 +89,147 @@ function start() {
 	grid.x = 0;
 	grid.y = 0;
 	//add the circle to the stage.
-	stage.addChild(grid);
+	//stage.addChild(grid);
 	
 	
 	stage.update();
 	Ticker.setFPS(speed);
 	Ticker.addListener(this);
+//	}
+			stage.update();
 }
 
+function ChooseSprite()
+{
+	randomnumber++;
+	randomnumber = randomnumber%3;
+	if(randomnumber ==0)
+	{
+			// Define a spritesheet. Note that this data can be exported by Zoë.
+			var ss = new SpriteSheet({
+				"frames": {
+					"width": 30,
+					"numFrames": 2,
+					"height": 30
+				},
+				"animations": {"down": [0, 1]},
+				"images": ["assets/images/blueSprites.png"]
+			});
+
+			var circle = new BitmapAnimation(ss);
+
+			ss.getAnimation("down").frequency = 1;
+			ss.getAnimation("down").next = "down";
+			circle.gotoAndPlay("down");
+			currColour = "blue";
+	}
+	else if(randomnumber ==1)
+	{
+			// Define a spritesheet. Note that this data can be exported by Zoë.
+			var ss = new SpriteSheet({
+				"frames": {
+					"width": 30,
+					"numFrames": 2,
+					"height": 30
+				},
+				"animations": {"down": [0, 1]},
+				"images": ["assets/images/greenSprites.png"]
+			});
+
+			var circle = new BitmapAnimation(ss);
+
+			ss.getAnimation("down").frequency = 1;
+			ss.getAnimation("down").next = "down";
+			circle.gotoAndPlay("down");
+			currColour = "green";
+	}
+	else if(randomnumber ==2)
+	{
+			// Define a spritesheet. Note that this data can be exported by Zoë.
+			var ss = new SpriteSheet({
+				"frames": {
+					"width": 30,
+					"numFrames": 2,
+					"height": 30
+				},
+				"animations": {"down": [0, 1]},
+				"images": ["assets/images/pinkSprites.png"]
+			});
+
+			var circle = new BitmapAnimation(ss);
+
+			ss.getAnimation("down").frequency = 1;
+			ss.getAnimation("down").next = "down";
+			circle.gotoAndPlay("down");
+			currColour = "pink";
+	}
+			// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
+			return circle;
+		}
+		
+		function ChooseTile()
+{
+	if(currColour == "blue"){
+			// Define a spritesheet. Note that this data can be exported by Zoë.
+			var ss = new SpriteSheet({
+				"frames": {
+					"width": 30,
+					"numFrames": 2,
+					"height": 30
+				},
+				"animations": {"down": [0, 0]},
+				"images": ["assets/images/blue1.png"]
+			});
+
+			var circle = new BitmapAnimation(ss);
+
+			ss.getAnimation("down").frequency = 1;
+			ss.getAnimation("down").next = "down";
+			circle.gotoAndPlay("down");
+			currColour = "blue";
+	}
+	else if(currColour == "green"){
+			// Define a spritesheet. Note that this data can be exported by Zoë.
+			var ss = new SpriteSheet({
+				"frames": {
+					"width": 30,
+					"numFrames": 2,
+					"height": 30
+				},
+				"animations": {"down": [0, 0]},
+				"images": ["assets/images/green1.png"]
+			});
+
+			var circle = new BitmapAnimation(ss);
+
+			ss.getAnimation("down").frequency = 1;
+			ss.getAnimation("down").next = "down";
+			circle.gotoAndPlay("down");
+			currColour = "green";
+	}
+	if(currColour == "pink"){
+			// Define a spritesheet. Note that this data can be exported by Zoë.
+			var ss = new SpriteSheet({
+				"frames": {
+					"width": 30,
+					"numFrames": 2,
+					"height": 30
+				},
+				"animations": {"down": [0, 0]},
+				"images": ["assets/images/pink1.png"]
+			});
+
+			var circle = new BitmapAnimation(ss);
+
+			ss.getAnimation("down").frequency = 1;
+			ss.getAnimation("down").next = "down";
+			circle.gotoAndPlay("down");
+			currColour = "pink";
+	}
+			// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
+			return circle;
+		}
+	
 //function handleKeyDown(e) {
 	//cross browser issues exist
 //	if(!e){ var e = window.event; }
@@ -126,7 +271,7 @@ function drawTower() {
 	g.setStrokeStyle(1);
 	g.beginStroke(Graphics.getRGB(0,0,255,1));
 	g.drawRect(0, 0,ktileSize,ktileSize);
-	towerTiles = new Shape(g);
+	towerTiles = ChooseTile();
 	towerTiles.x = tower[0];
 	towerTiles.y = bounds.height - tower[1]*ktileSize;
 	//add the circle to the stage.
