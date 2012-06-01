@@ -14,6 +14,8 @@ var kborder = 25;
 var kcolumns = 9;
 var krows = 14;
 
+var background;
+
 function init() {
 	canvas = document.getElementById('canvas');
 
@@ -33,6 +35,9 @@ function start() {
 	bounds.height = canvas.height;
 				
 	stage = new Stage(canvas);
+	
+	//background = new Image();
+	
 	switchDir = 1;
 	speed = 3;
 	tower = [];
