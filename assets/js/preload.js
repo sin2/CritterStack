@@ -1,15 +1,10 @@
-
-	var preload;
-	var messageField;
-	var stage;		
-	var loadingInterval;
-	var splash;
-	var canvas;
-	
     function startPreload(startMenu) {
 		preload = new PreloadJS();
 		
-		preload.onComplete = doneLoading;
+		preload.onComplete = function ()
+		{
+			doneLoading(startMenu);
+		};
 		preload.installPlugin(SoundJS);
 		
 		var manifest = [			
@@ -34,18 +29,30 @@
 		//preload.onProgress = updateLoading;
 		preload.loadFile("assets/images/blue1.png");
 
+		// begin loading content (only sounds to load)
+		var manifest = [
+			{id:"audio-level-1", src:"assets/audio/level_1.mp3"},
+			{id:"audio-level-2", src:"assets/audio/level_2.mp3"},
+			{id:"audio-level-3", src:"assets/audio/level_3.mp3"},
+			{id:"audio-level-4", src:"assets/audio/level_4.mp3"},
+			{id:"audio-critter", src:"assets/audio/sound_bite.mp3"},
+		];
+		SoundJS.FlashPlugin.BASE_PATH = "assets/";
+		preload.loadManifest(manifest);
+
 		canvas = document.getElementById("canvas");
 		stage = new Stage(canvas);
-		messageField = new Text("Loading", "bold 24px Arial", "#000000");
+		messageField = new Text("Loading", DEFAULT_FONT, "#000000");
 		messageField.textAlign = "center";
 		messageField.x = canvas.width / 2;
 		messageField.y = canvas.height / 4*3;
 		var img = new Image();
-		img.src = "assets/images/splash.png";
+
+		img.src = "assets/images/splash1.png";
 		img.onload = function(e){
-		splash = new Bitmap(e.target);
-		stage.addChild(splash, messageField);
-		stage.update();
+			splash = new Bitmap(e.target);
+				stage.addChild(splash, messageField);
+				stage.update();
 			}
 			
 		stage.addChild(messageField);
@@ -63,8 +70,6 @@
 	
 	function updateLoading(startMenu) {
 		messageField.text = "Loading " + (preload.progress*100|0) + "%";
-		if(preload.progress ==1)
-		doneLoading(startMenu);
 		stage.update();
 	}
 	
@@ -74,5 +79,10 @@
 		startMenu();
 		
 		stage.removeChild(messageField);
+		stage.update();
+
+		// start the music
+		console.log('done loading');
+		SoundJS.play("audio-level-1", SoundJS.INTERRUPT_NONE, 0, 0, -1, 0.4);
 	}
 	

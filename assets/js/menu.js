@@ -6,6 +6,7 @@ var preload;
 	var canvas;
 	var button;
 	var event1;
+	var stackers;
 	
 function DisplayMenu(startGame)
 {
@@ -13,17 +14,13 @@ function DisplayMenu(startGame)
 		canvas = document.getElementById("canvas");
 		stage = new Stage(canvas);
 		var img = new Image();
-		img.src = "assets/images/splash.png";
-		var img2 = new Image();
-		img2.src = "assets/images/startButton.png";
-			splash = new Bitmap(img);
+		img.src = "assets/images/splash2.png";
+			img.onload = function(e){
+			splash = new Bitmap(e.target);
 			stage.addChild(splash);
-			 button = new Bitmap(img2);
-			 button.x = canvas.width/2;
-			 button.y = canvas.height/4*3;
-			stage.addChild(button);
+			stage.update();
+			}
 			
-		stage.update(); 	//update the stage to show text
 		canvas.onclick = HandleClick;
 	}
 	
@@ -36,10 +33,12 @@ function DisplayInstructions(startGame)
 		messageField.x = canvas.width / 2;
 		messageField.y = canvas.height / 4*3;
 		var img = new Image();
-		img.src = "assets/images/splash.png";
-			splash = new Bitmap(img);
+		img.src = "assets/images/splash3.png";
+			img.onload = function(e){
+			splash = new Bitmap("fullBack");
 			stage.addChild(splash);
 			stage.addChild(messageField);
+			}
 			
 		stage.update(); 
 		setTimeout(startGame, 10000);
