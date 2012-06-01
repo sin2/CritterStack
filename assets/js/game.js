@@ -13,7 +13,14 @@ var krows = 14;
 function init() {
 	canvas = document.getElementById('canvas');
 
-	start();
+		startPreload(function(){
+			StartMenu();
+			});
+}
+function StartMenu()
+{
+	DisplayMenu();
+	
 }
 
 function start() {

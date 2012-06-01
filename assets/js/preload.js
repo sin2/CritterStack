@@ -21,7 +21,7 @@
 			preload.loadFile("assets/image0.png");
 		//preload.onProgress = updateLoading;
 
-		canvas = document.getElementById("gameCanvas");
+		canvas = document.getElementById("canvas");
 		stage = new Stage(canvas);
 		messageField = new Text("Loading", "bold 24px Arial", "#000000");
 		messageField.textAlign = "center";
@@ -61,6 +61,5 @@
 		startMenu();
 		
 		stage.removeChild(messageField);
-			stage.removeChild(splash);
 	}
 	
