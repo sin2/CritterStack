@@ -13,6 +13,10 @@ var krows = 14;
 function init() {
 	canvas = document.getElementById('canvas');
 
+	start();
+}
+
+function start() {
 	bounds = new Rectangle();
 	bounds.width = canvas.width;
 	bounds.height = canvas.height;
