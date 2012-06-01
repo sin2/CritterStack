@@ -7,7 +7,7 @@ var speed;
 var towerLevel;
 var tower;
 var towerLast;
-var floorSize;
+var towerSize;
 
 var ktileSize = 30;
 var kborder = 25;
@@ -31,7 +31,8 @@ function StartMenu()
 
 function StartInstructions()
 {
-	DisplayInstructions(function(){start();});
+	//DisplayInstructions(function(){start();});
+	start();
 }
 
 function start() {
@@ -41,14 +42,14 @@ function start() {
 				
 	stage = new Stage(canvas);
 	
-	//background = new Image();
+	background = new Image();
 	
 	switchDir = 1;
 	speed = 3;
 	tower = [];
 	towerLast = [];
 	towerLevel = 1;
-	floorSize = 5;
+	towerSize = 5;
 	
 	var g = new Graphics();
 	//stroke of 1 px
@@ -83,6 +84,7 @@ function start() {
 	stage.update();
 	Ticker.setFPS(speed);
 	Ticker.addListener(this);
+	canvas.addEventListener("mousedown", placeTile, false);
 }
 
 //function handleKeyDown(e) {
@@ -109,15 +111,38 @@ document.onkeydown = function(evt) {
 };
 
 function placeTile() {
+	// Save last tower placement
 	if(tower != []){
 		towerLast = tower;
 	}
-	tower = [circle.x,towerLevel,floorSize];
+	tower = [circle.x,towerLevel,towerSize];
 
+	// Check the tower placement 
+	if(checkTower() == true){
+		drawTower();
+	}
+	else {
+		if(towerLevel == 14){
+			nextStage();
+		}
+		else{
+			//TODO: Gameover
+		
+		} 
+	}
+
+	// Increment stuff
 	towerLevel++;
 	speed+= 1;
 	Ticker.setFPS(speed);
-	drawTower();
+	if(towerLevel % 2 == 1){
+		circle.x = kborder;
+	}
+	else{
+		circle.x = bounds.width - kborder;
+	}
+	
+
 }
 
 function drawTower() {
@@ -125,7 +150,10 @@ function drawTower() {
 	//stroke of 1 px
 	g.setStrokeStyle(1);
 	g.beginStroke(Graphics.getRGB(0,0,255,1));
-	g.drawRect(0, 0,ktileSize,ktileSize);
+	for(var size = 0;size<tower[2];size++){
+		g.drawRect(ktileSize*size, 0,ktileSize,ktileSize);
+	}
+	//g.drawRect(0, 0,ktileSize,ktileSize);
 	towerTiles = new Shape(g);
 	towerTiles.x = tower[0];
 	towerTiles.y = bounds.height - tower[1]*ktileSize;
@@ -134,15 +162,39 @@ function drawTower() {
 }
 
 function checkTower(){
-	if(towerLevel > 2){
-		if(tower[0] == towerLast[0]){
+	if(towerLevel > 1){
+		// tower was placed perfectly
+		if(tower[0] == towerLast[0] && tower[2] == towerLast[2]){
+			console.log("Perfect");
 			return true;
 		}
+		// tower placed left of old tower
+		else if(tower[0] < towerLast[0] && tower[0]+tower[2]*ktileSize > towerLast[0]){
+			console.log("Left");
+			//size = ((tower[0]+tower[2]*ktileSize) - towerLast[0] - kborder)/ktileSize
+			tower = [towerLast[0], tower[1], ((tower[0]+tower[2]*ktileSize) - towerLast[0])/ktileSize];
+			return true;		
+		}
+		// tower placed right of old tower 
+		else if(tower[0] > towerLast[0] && tower[0] < towerLast[0]+towerLast[2]*ktileSize){
+			console.log("Right");
+			//size = ((towerLast[0]+towerLast[2]*ktileSize) - tower[0] - border)/ktileSize
+			tower = [tower[0], tower[1], ((towerLast[0]+towerLast[2]*ktileSize) - tower[0])/ktileSize];
+			return true;
+		}
+		//tower was placed completely wrong
+		else{
+			console.log("WTF");
 			return false;
+		}
 	}
+	console.log("First layer");
 	return true;
 }
 
+function nextStage(){
+
+}
 function tick() {
 	if(circle.x >= bounds.width-kborder-ktileSize) {
 		switchDir = -1;
@@ -153,17 +205,18 @@ function tick() {
 	circle.x += switchDir * ktileSize;
 	circle.y = bounds.height - ktileSize*towerLevel;
 	
-	//drawTower();
-	if(checkTower() == true){
-		stage.update();
-	}
-	else {
-		if(towerLevel == 14){
-			//TODO: Next Level
-		}
-		else{
-			//TODO: Gameover
-		
-		} 
-	}
+//	drawTower();
+//	if(checkTower() == true){
+//		stage.update();
+//	}
+//	else {
+//		if(towerLevel == 14){
+//			nextStage();
+//		}
+//		else{
+//			TODO: Gameover
+//		
+//		} 
+//	}
+	stage.update();
 }
