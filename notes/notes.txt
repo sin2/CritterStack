@@ -1,0 +1,64 @@
+Critter Stack - 01/06/2012
+
+Metrics (Refer to screen.png)
+-----------------------------------------
+
+Screen dimension: 320 x 480
+Tile dimension: 30 x 30
+
+RED - High Score bar (non-playable area): (0,0) -> (320, 30)
+
+WHITE - Game area (playable area): (25, 30) -> (295, 450)
+
+Dead zones:
+
+	BLUE - Left: (0, 30) -> (25, 450)
+	BLUE - Right: (295, 30) -> (320, 450)
+	GREEN - Bottom: (0, 450) -> (320, 480)
+
+
+Game Layers/Flow
+-----------------------------------------
+0)	Splash Screen (preloading assets)
+
+
+1)	Menu (mandatory)
+
+	1.1)	New Game
+	
+		1.1.1)	Instruction screen with [SPACE] to start and [15? SECOND TIMER] until game starts
+
+			1.1.1.1)	Game begins with first row having 5-tiles moving side to side.
+
+						Each row completed will earn you [STAGE #] * [ROW #] * [# OF TILES] points
+
+						There are 4-stages in total (UNDERSEA, LAND, SKY, SPACE)
+
+						Each stage the tile movement increases by [#-seconds]
+
+						e.g. game play:
+
+							Very first row when game starts will earn you [1 x 1 x 5 = 5]
+						
+							On the second row if you successfuly land 5-tiles you will earn [1 x 2 x 5 = 10].  Total points at this will be 15-points
+							
+							If on the second row you miss 2-tiles you will earn [1 x 2 x 3 = 6].  Total points at this point will be 11-points.
+
+							When the user reaches the 14th tile, the game play will pause, and the entire screen will transition/move down into the 2nd stage
+							and the very bottom row will show the tile from the previous stage (at the 14th level).
+
+							Game play will continue with increased difficulty (tile speed increases).
+
+
+				1.1.1.1.1) User presses [ESC].  Playing area is masked.  Game is paused.  User is given two options:
+					A) "Resume" (game resumes in #-seconds)
+
+					B) "Quit" (points not earned)
+
+	1.2)	High Scores
+
+		1.2.1)	Think classic game high score screen (e.g. http://i.imgur.com/rrZ6P.gif ).  [RANK], [SCORE], [LEVEL?], [NAME]
+		
+
+	1.3)	Exit - Optional and only needed if turned into an actual (mobile) app
+		1.3.1)	"Are you sure you want to exit" etc.
