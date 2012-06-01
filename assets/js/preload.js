@@ -10,15 +10,18 @@
 		preload = new PreloadJS();
 		
 		preload.onComplete = doneLoading;
-		var manifest = [
-				{src:"./assets/image0.png", id:"image0"},
-				{src:"./assets/image1.png", id:"image1"},
-				{src:"./assets/image2.png", id:"image2"},
-				{src:"./assets/image3.png", id:"image3"}
-			];
 		preload.installPlugin(SoundJS);
-        preload.loadManifest(manifest);
-			preload.loadFile("assets/image0.png");
+			preload.loadFile("assets/images/blue1.png");
+			preload.loadFile("assets/images/blue2.png");
+			preload.loadFile("assets/images/blue3.png");
+			
+			preload.loadFile("assets/images/green1.png");
+			preload.loadFile("assets/images/green2.png");
+			preload.loadFile("assets/images/green3.png");
+			
+			preload.loadFile("assets/images/pink1.png");
+			preload.loadFile("assets/images/pink2.png");
+			preload.loadFile("assets/images/pink3.png");
 		//preload.onProgress = updateLoading;
 
 		canvas = document.getElementById("canvas");

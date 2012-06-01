@@ -47,5 +47,6 @@ function DisplayInstructions(startGame)
 
 function HandleClick()
 {
+	canvas.onclick = null;
 	event1();
 }
