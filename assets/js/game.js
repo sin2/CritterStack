@@ -300,29 +300,13 @@ function placeTile() {
 }
 
 function drawTower() {
-	var g = new Graphics();
-	//stroke of 1 px
-//	g.setStrokeStyle(1);
-//	g.beginStroke(Graphics.getRGB(0,0,255,1));
 	for(var size = 0;size<tower[2];size++){
-		g.setStrokeStyle(1);
-		g.beginStroke(Graphics.getRGB(0,0,255,1));
-//		g.drawRect(ktileSize*size, 0,ktileSize,ktileSize);
 		towerTiles = ChooseTile();
 		towerTiles.x = tower[0]+size*ktileSize;
 		towerTiles.y = bounds.height - tower[1]*ktileSize;
 		stage.addChild(towerTiles);
 	}
-	//g.drawRect(0, 0,ktileSize,ktileSize);
-	towerTiles = new Shape(g);
-//=======
-//	g.drawRect(0, 0,ktileSize,ktileSize);
-//	towerTiles = ChooseTile();
-// >>> 7d2f91f353ffdc9d1cbe05d0de903220f0cb4e6f
-	towerTiles.x = tower[0];
-	towerTiles.y = bounds.height - tower[1]*ktileSize;
-	//add the circle to the stage.
-	stage.addChild(towerTiles);
+
 }
 
 function checkTower(){
@@ -362,19 +346,20 @@ function nextStage(){
 }
 
 function redrawTopSprite(){
-	var g = new Graphics();
 	//stroke of 1 px
-	g.setStrokeStyle(1);
-	g.beginStroke(Graphics.getRGB(255,0,0,.7));
+	//g.setStrokeStyle(1);
+	//g.beginStroke(Graphics.getRGB(255,0,0,.7));
 	for(var length = 0; length<tower[3];length++){
-		g.drawRect(length*ktileSize,0, ktileSize,ktileSize);
+		circle = ChooseSprite();
+		circle.x = kborder+length*ktileSize;
+		circle.y = bounds.height - ktileSize*towerLevel;
+		stage.addChild(circle);
 	}
 //	g.drawRect(0,0, ktileSize,ktileSize);
 	//circle = ChooseSprite();
-	circle.x = kborder;
-	circle.y = bounds.height - ktileSize*towerLevel;
+	//circle.x = kborder;
 	//add the circle to the stage.
-	stage.addChild(circle);	
+	//stage.addChild(circle);	
 }
 
 function tick() {
