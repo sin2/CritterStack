@@ -273,6 +273,7 @@ function placeTile() {
 	// Check the tower placement 
 	if(checkTower() == true){
 		drawTower();
+		console.log("Tower: "+tower+" TowerLast: "+towerLast);
 	}
 	else {
 		if(towerLevel == 14){
@@ -301,17 +302,23 @@ function placeTile() {
 function drawTower() {
 	var g = new Graphics();
 	//stroke of 1 px
-	g.setStrokeStyle(1);
-	g.beginStroke(Graphics.getRGB(0,0,255,1));
+//	g.setStrokeStyle(1);
+//	g.beginStroke(Graphics.getRGB(0,0,255,1));
 	for(var size = 0;size<tower[2];size++){
-		g.drawRect(ktileSize*size, 0,ktileSize,ktileSize);
+		g.setStrokeStyle(1);
+		g.beginStroke(Graphics.getRGB(0,0,255,1));
+//		g.drawRect(ktileSize*size, 0,ktileSize,ktileSize);
+		towerTiles = ChooseTile();
+		towerTiles.x = tower[0]+size*ktileSize;
+		towerTiles.y = bounds.height - tower[1]*ktileSize;
+		stage.addChild(towerTiles);
 	}
 	//g.drawRect(0, 0,ktileSize,ktileSize);
 	towerTiles = new Shape(g);
 //=======
 //	g.drawRect(0, 0,ktileSize,ktileSize);
 //	towerTiles = ChooseTile();
-//>>>>>>> 7d2f91f353ffdc9d1cbe05d0de903220f0cb4e6f
+// >>> 7d2f91f353ffdc9d1cbe05d0de903220f0cb4e6f
 	towerTiles.x = tower[0];
 	towerTiles.y = bounds.height - tower[1]*ktileSize;
 	//add the circle to the stage.
@@ -337,6 +344,7 @@ function checkTower(){
 			console.log("Right");
 			//size = ((towerLast[0]+towerLast[2]*ktileSize) - tower[0] - border)/ktileSize
 			tower = [tower[0], tower[1], ((towerLast[0]+towerLast[2]*ktileSize) - tower[0])/ktileSize];
+			redrawTopSprite();
 			return true;
 		}
 		//tower was placed completely wrong
@@ -352,6 +360,23 @@ function checkTower(){
 function nextStage(){
 
 }
+
+function redrawTopSprite(){
+	var g = new Graphics();
+	//stroke of 1 px
+	g.setStrokeStyle(1);
+	g.beginStroke(Graphics.getRGB(255,0,0,.7));
+	for(var length = 0; length<tower[3];length++){
+		g.drawRect(length*ktileSize,0, ktileSize,ktileSize);
+	}
+//	g.drawRect(0,0, ktileSize,ktileSize);
+	//circle = ChooseSprite();
+	circle.x = kborder;
+	circle.y = bounds.height - ktileSize*towerLevel;
+	//add the circle to the stage.
+	stage.addChild(circle);	
+}
+
 function tick() {
 	if(circle.x >= bounds.width-kborder-ktileSize) {
 		switchDir = -1;
