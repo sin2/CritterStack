@@ -33,106 +33,98 @@ var DEFAULT_FONT = "bold 24px HappyHell";
 
 function init() {
 	canvas = document.getElementById('canvas');
+	stage = new Stage(canvas);
 
-		startPreload(function(){
-			StartMenu();
-			});
+	// Enable touch events
+	Touch.enable(stage);
+	
+	// Handle click events
+	startPreload(function(){
+		startMenu();
+	});
 }
 
-function StartMenu()
+function startMenu()
 {
-	DisplayMenu(function(){StartInstructions();});
+	console.log('startMenu');
+	displayMenu(function(){
+		displayInstructions(function(){
+			startGame();
+		});
+	});
 }
 
-function StartInstructions()
-{
-	//DisplayInstructions(function(){start();});
-	start();
-
-}
-
-function start() {
+function startGame() {
+	console.log('startGame');
+	
 	bounds = new Rectangle();
 	bounds.width = canvas.width;
 	bounds.height = canvas.height;
-				
-	stage = new Stage(canvas);
-//	var img = new Image();
-//		img.src = "assets/images/back3.png";
-//			img.onload = function(e){
-//			splash = new Bitmap(e.target);
-//			stage.addChild(splash);
-			
-	bgSource = new Image();
-	bgSource.src = './assets/images/background.png';
-	bgSource.name = 'bg';
-	bgSource.onload = loadGFX;		
-	
+
+	stageLevel = 1;
 	switchDir = 1;
 	speed = 1;
 	tower = [];
 	towerLast = [];
 	towerLevel = 1;
 	towerSize = 5;
-	
+
+	// Update background image
+	updateBackground();
+
 	// Circle is the top most sprite being animated (Need to rename...)
 	circle = ChooseSprite(towerSize);
 	circle.x = kborder;
 	circle.y = bounds.height - ktileSize*towerLevel;
 	//add the circle to the stage.
 	stage.addChild(circle);
-	
-	// Create grid	
-	g = new Graphics();
-	g.setStrokeStyle(1);
-	g.beginStroke(Graphics.getRGB(0,0,0,1.0));
-	g.drawRect(0,0, canvas.width,canvas.height);
-	g.beginStroke(Graphics.getRGB(255,0,0,.7));
-//	for(var step = kborder;step<canvas.width;step+= 30) {
-//		g.drawRect(step,0,0,canvas.height);
-//	}
-//	for(var step = kborder;step<canvas.height;step+= 30) {
-//		g.drawRect(step,0,0,canvas.height);
-//	}
-	g.beginStroke(Graphics.getRGB(255,0,255,.7));
-	g.drawRect(0,0,canvas.width,ktileSize);
-	grid = new Shape(g);
-	grid.x = 0;
-	grid.y = 0;
-	stage.addChild(grid);
-	
-	
+
+	// Draw grid
+	// drawGrid();
+
 	stage.update();
 	Ticker.setFPS(speed);
 	Ticker.addListener(this);
-	canvas.addEventListener("mousedown", placeTile, false);
 
+	// On click place tile
+	stage.onMouseDown = function(e){
+		// Place tile
+		placeTile();
+		
+		// Cancel propagation
+		e.nativeEvent.preventDefault();
+	}
+}
+
+function updateBackground(){
+	// Load background image
+	// TODO: Need to change this to change levels
+	if(typeof stage.background == 'undefined') {
+		stage.background = new Bitmap(preload.getResult("background").result);
+		stage.addChildAt(stage.background, 0);
+	}
+
+	stage.background.y = -canvas.height*stageLevel;
+	stage.update();
 }
 
 function nextStage(){
 	// TODO
 	stageLevel++;
+
+	updateBackground();
 }
 
 function ClearAll()
 {
 	canvas.removeEventListener("mousedown", placeTile, false);
 	stage.clear();
-	}
+}
 
 function gameOver(){
 	alert("LOSER!");
 	ClearAll();
 	StartMenu();
-}
-
-function loadGFX(e){
-    if(e.target.name = 'bg'){
-    	background = new Bitmap(bgSource);
-		stageLevel = Math.floor(Math.random()*4);
-		background.y = -canvas.height*stageLevel;
-    	stage.addChildAt(background,0);
-    }  
 }
 
 function ChooseSprite(numCritters)
@@ -314,4 +306,25 @@ function tick() {
 	circle.y = bounds.height - ktileSize*towerLevel;
 	
 	stage.update();
+}
+
+function drawGrid(){
+	// Create grid	
+	g = new Graphics();
+	g.setStrokeStyle(1);
+	g.beginStroke(Graphics.getRGB(0,0,0,1.0));
+	g.drawRect(0,0, canvas.width,canvas.height);
+	g.beginStroke(Graphics.getRGB(255,0,0,.7));
+//	for(var step = kborder;step<canvas.width;step+= 30) {
+//		g.drawRect(step,0,0,canvas.height);
+//	}
+//	for(var step = kborder;step<canvas.height;step+= 30) {
+//		g.drawRect(step,0,0,canvas.height);
+//	}
+	g.beginStroke(Graphics.getRGB(255,0,255,.7));
+	g.drawRect(0,0,canvas.width,ktileSize);
+	grid = new Shape(g);
+	grid.x = 0;
+	grid.y = 0;
+	stage.addChild(grid);
 }
