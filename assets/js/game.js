@@ -76,7 +76,7 @@ function start() {
 	towerSize = 5;
 	
 	// Circle is the top most sprite being animated (Need to rename...)
-	circle = ChooseSprite();
+	circle = ChooseSprite(towerSize);
 	circle.x = kborder;
 	circle.y = bounds.height - ktileSize*towerLevel;
 	//add the circle to the stage.
@@ -114,8 +114,16 @@ function nextStage(){
 	stageLevel++;
 }
 
+function ClearAll()
+{
+	canvas.removeEventListener("mousedown", placeTile, false);
+	stage.clear();
+	}
+
 function gameOver(){
-	// TODO
+	alert("LOSER!");
+	ClearAll();
+	StartMenu();
 }
 
 function loadGFX(e){
@@ -127,7 +135,7 @@ function loadGFX(e){
     }  
 }
 
-function ChooseSprite()
+function ChooseSprite(numCritters)
 {
 	var colour = "";
 	randomnumber=Math.floor(Math.random()*3);
@@ -146,11 +154,11 @@ function ChooseSprite()
 	// Define a spritesheet. Note that this data can be exported by Zoë.
 	var ss = new SpriteSheet({
 		"frames": {
-			"width": 30,
+			"width": 30*numCritters,
 			"numFrames": 2,
 			"height": 30
 		},
-		"animations": {"down": [0, 1]},
+		"animations": {"down": [0,1]},
 		"images": ["assets/images/"+colour+"Sprites.png"]
 	});
 
@@ -272,6 +280,7 @@ function checkTower(){
 		//tower was placed completely wrong
 		else{
 			console.log("Game Over");
+			
 			return false;
 		}
 	}
