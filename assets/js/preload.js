@@ -39,9 +39,6 @@
 		];
 		SoundJS.FlashPlugin.BASE_PATH = "assets/";
 		preload.loadManifest(manifest);
-
-		canvas = document.getElementById("canvas");
-		stage = new Stage(canvas);
 		messageField = new Text("Loading", DEFAULT_FONT, "#000000");
 		messageField.textAlign = "center";
 		messageField.x = canvas.width / 2;

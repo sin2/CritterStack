@@ -11,8 +11,9 @@ var preload;
 function DisplayMenu(startGame)
 {
 	event1 = startGame;
-		canvas = document.getElementById("canvas");
-		stage = new Stage(canvas);
+	if(stage != null){
+	stage.clear();
+	}
 		var img = new Image();
 		img.src = "assets/images/splash2.png";
 			img.onload = function(e){
@@ -26,16 +27,17 @@ function DisplayMenu(startGame)
 	
 function DisplayInstructions(startGame)
 {
-		canvas = document.getElementById("canvas");
-		stage = new Stage(canvas);
-		messageField = new Text("Instructions Go Here", "bold 24px Arial", "#000000");
+	if(stage != null){
+	stage.clear();
+	}
+		messageField = new Text("Instructions Go Here", DEFAULT_FONT, "#000000");
 		messageField.textAlign = "center";
 		messageField.x = canvas.width / 2;
 		messageField.y = canvas.height / 4*3;
 		var img = new Image();
 		img.src = "assets/images/splash3.png";
 			img.onload = function(e){
-			splash = new Bitmap("fullBack");
+			splash = new Bitmap("e.target");
 			stage.addChild(splash);
 			stage.addChild(messageField);
 			}
@@ -48,4 +50,28 @@ function HandleClick()
 {
 	canvas.onclick = null;
 	event1();
+}
+
+function ShowTokensEarned(tokens, returnFcn)
+{
+	
+	canvas.onclick = null;
+	if(stage != null){
+	stage.clear();
+	}
+		messageField = new Text("You earned: " + tokens + ". Click to Continue", DEFAULT_FONT, "#000000");
+		messageField.textAlign = "center";
+		messageField.x = canvas.width / 2;
+		messageField.y = canvas.height / 4*3;
+		var img = new Image();
+		img.src = "assets/images/back3.png";
+		var tokenImg = new Image();
+		tokenImg.src = "assets/images/token.png";
+			img.onload = function(e){
+			splash = new Bitmap(e.target);
+			stage.addChild(splash, messageField);
+			}
+			stage.update();
+			
+		setTimeout(returnFcn, 3000);
 }

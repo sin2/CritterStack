@@ -29,10 +29,15 @@ var canvas;
 var button;
 var event1;
 
+var tokens;
+var tokenString;
+
 var DEFAULT_FONT = "bold 24px HappyHell";
 
 function init() {
 	canvas = document.getElementById('canvas');
+	stage = new Stage(canvas);
+	tokens = 0;
 
 		startPreload(function(){
 			StartMenu();
@@ -118,13 +123,22 @@ function ClearAll()
 {
 	canvas.removeEventListener("mousedown", placeTile, false);
 	stage.clear();
-	}
+}
+
 
 function gameOver(){
-	alert("LOSER!");
+	var currTokens =0 ;
+for(var size = 0;size<=tower[2];size++){
+	currTokens += tower[2] * 1;//stageLevel when it works;
+	}
+	tokens+=currTokens;
+	alert("You earned " +currTokens +" tokens! You now have "+ tokens+ " tokens!");
+	//ShowTokensEarned(tokens, function(){
 	ClearAll();
-	StartMenu();
+	StartMenu();//);
+	//return false;
 }
+
 
 function loadGFX(e){
     if(e.target.name = 'bg'){
@@ -132,6 +146,8 @@ function loadGFX(e){
 		stageLevel = Math.floor(Math.random()*4);
 		background.y = -canvas.height*stageLevel;
     	stage.addChildAt(background,0);
+		tokenString = new Text(tokens + " tokens",DEFAULT_FONT, "#FFFFFF");
+		stage.addChildAt(tokenString,0);
     }  
 }
 
@@ -206,6 +222,7 @@ document.onkeydown = function(evt) {
 
 // Called after button press/click
 function placeTile() {
+	console.log("TowerSize: "+towerSize);
 	// Save last tower placement
 	if(tower != []){
 		towerLast = tower;
