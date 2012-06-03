@@ -20,6 +20,7 @@ var krows = 14;
 
 var background;
 var bgSource;
+var tokenBarSource;
 var preload;
 var messageField;
 var stage;		
@@ -31,6 +32,7 @@ var event1;
 
 var tokens;
 var tokenString;
+var scoreBack;
 
 var DEFAULT_FONT = "bold 24px HappyHell";
 
@@ -39,84 +41,90 @@ function init() {
 	stage = new Stage(canvas);
 	tokens = 0;
 
-	// Enable touch events
-	Touch.enable(stage);
-	
-	// Handle click events
-	startPreload(function(){
-		startMenu();
-	});
+		startPreload(function(){
+			StartMenu();
+			});
 }
 
-function startMenu()
+function StartMenu()
 {
-	console.log('startMenu');
-	displayMenu(function(){
-		displayInstructions(function(){
-			startGame();
-		});
-	});
+	DisplayMenu(function(){StartInstructions();});
 }
 
-function startGame() {
-	console.log('startGame');
-	
+function StartInstructions()
+{
+	//DisplayInstructions(function(){start();});
+	start();
+
+}
+
+function start() {
 	bounds = new Rectangle();
 	bounds.width = canvas.width;
 	bounds.height = canvas.height;
-
-	stageLevel = 1;
+				
+	stage = new Stage(canvas);
+//	var img = new Image();
+//		img.src = "assets/images/back3.png";
+//			img.onload = function(e){
+//			splash = new Bitmap(e.target);
+//			stage.addChild(splash);
+			
+	bgSource = new Image();
+	bgSource.src = './assets/images/background.png';
+	bgSource.name = 'bg';
+	bgSource.onload = loadGFX;		
+	
+	tokens = 10;
+	tokenBarSource = new Image();
+	tokenBarSource.src = 'assets/images/tokenBar.png';
+	tokenBarSource.name = 'tb';
+	tokenBarSource.onload = loadGFXToken;		
+	
 	switchDir = 1;
 	speed = 1;
 	tower = [];
 	towerLast = [];
 	towerLevel = 1;
 	towerSize = 5;
-
-	// Update background image
-	updateBackground();
-
+	
 	// Circle is the top most sprite being animated (Need to rename...)
 	circle = ChooseSprite(towerSize);
 	circle.x = kborder;
 	circle.y = bounds.height - ktileSize*towerLevel;
 	//add the circle to the stage.
-	stage.addChild(circle);
-
-	// Draw grid
-	// drawGrid();
-
+	stage.addChildAt(circle,3);
+	
+	// Create grid	
+	//g = new Graphics();
+//	g.setStrokeStyle(1);
+//	g.beginStroke(Graphics.getRGB(0,0,0,1.0));
+//	g.drawRect(0,0, canvas.width,canvas.height);
+//	g.beginStroke(Graphics.getRGB(255,0,0,.7));
+//	for(var step = kborder;step<canvas.width;step+= 30) {
+//		g.drawRect(step,0,0,canvas.height);
+//	}
+//	for(var step = kborder;step<canvas.height;step+= 30) {
+//		g.drawRect(step,0,0,canvas.height);
+//	}
+	//g.beginStroke(Graphics.getRGB(255,0,255,.7));
+//	g.drawRect(0,0,canvas.width,ktileSize);
+//	grid = new Shape(g);
+//	grid.x = 0;
+//	grid.y = 0;
+//	stage.addChild(grid);
+	
+	
 	stage.update();
 	Ticker.setFPS(speed);
 	Ticker.addListener(this);
+	canvas.addEventListener("mousedown", placeTile, false);
 
-	// On click place tile
-	stage.onMouseDown = function(e){
-		// Place tile
-		placeTile();
-		
-		// Cancel propagation
-		e.nativeEvent.preventDefault();
-	}
-}
-
-function updateBackground(){
-	// Load background image
-	// TODO: Need to change this to change levels
-	if(typeof stage.background == 'undefined') {
-		stage.background = new Bitmap(preload.getResult("background").result);
-		stage.addChildAt(stage.background, 0);
-	}
-
-	stage.background.y = -canvas.height*stageLevel;
-	stage.update();
 }
 
 function nextStage(){
 	// TODO
 	stageLevel++;
-
-	updateBackground();
 }
 
 function ClearAll()
@@ -125,17 +133,16 @@ function ClearAll()
 	stage.clear();
 }
 
+
 function gameOver(){
 	var currTokens =0 ;
-for(var size = 0;size<=tower[2];size++){
+for(var size = 0;size<=tower[1];size++){
 	currTokens += tower[2] * 1;//stageLevel when it works;
 	}
 	tokens+=currTokens;
 	alert("You earned " +currTokens +" tokens! You now have "+ tokens+ " tokens!");
-	//ShowTokensEarned(tokens, function(){
 	ClearAll();
-	startMenu();//);
-	//return false;
+	StartMenu();
 }
 
 
@@ -144,10 +151,21 @@ function loadGFX(e){
     	background = new Bitmap(bgSource);
 		stageLevel = Math.floor(Math.random()*4);
 		background.y = -canvas.height*stageLevel;
+		
     	stage.addChildAt(background,0);
-		tokenString = new Text(tokens + " tokens",DEFAULT_FONT, "#FFFFFF");
-		stage.addChildAt(tokenString,0);
-    }  
+		stage.update();
+	}
+}
+function loadGFXToken(e){
+   if(e.target.name = 'tb'){
+    	bar = new Bitmap(tokenBarSource);
+		stage.addChildAt(bar, 1);
+		tokenString = new Text(tokens,"bold 18px HappyHell", "#FFFFFF");
+		tokenString.x = 32;
+		tokenString.y = 18;
+		stage.addChildAt(tokenString,2);
+		stage.update();
+	}
 }
 
 function ChooseSprite(numCritters)
@@ -229,11 +247,11 @@ function placeTile() {
 	tower = [circle.x,towerLevel,towerSize];
 
 	// Check the tower placement 
-	if(checkTower() == true && towerLevel <= 15){
+	if(checkTower() == true && towerLevel <= 14){
 		SoundJS.play("audio-critter");
 		drawTower();
 		console.log("Tower: "+tower+" TowerLast: "+towerLast);
-		if(towerLevel == 15){
+		if(towerLevel == 14){
 			console.log("Level Finished!");
 			nextStage();
 		}
@@ -252,7 +270,7 @@ function placeTile() {
 		stage.removeChild(circle);
 		circle = ChooseSprite(towerSize);
 		circle.x = kborder;
-		stage.addChild(circle);
+		stage.addChildAt(circle,3);
 	}
 	else{
 		stage.removeChild(circle);
@@ -268,7 +286,7 @@ function drawTower() {
 		towerTiles = ChooseTile();
 		towerTiles.x = tower[0]+size*ktileSize;
 		towerTiles.y = bounds.height - tower[1]*ktileSize;
-		stage.addChild(towerTiles);
+		stage.addChildAt(towerTiles,3);
 	}
 
 }
@@ -336,25 +354,4 @@ function tick() {
 	circle.y = bounds.height - ktileSize*towerLevel;
 	
 	stage.update();
-}
-
-function drawGrid(){
-	// Create grid	
-	g = new Graphics();
-	g.setStrokeStyle(1);
-	g.beginStroke(Graphics.getRGB(0,0,0,1.0));
-	g.drawRect(0,0, canvas.width,canvas.height);
-	g.beginStroke(Graphics.getRGB(255,0,0,.7));
-//	for(var step = kborder;step<canvas.width;step+= 30) {
-//		g.drawRect(step,0,0,canvas.height);
-//	}
-//	for(var step = kborder;step<canvas.height;step+= 30) {
-//		g.drawRect(step,0,0,canvas.height);
-//	}
-	g.beginStroke(Graphics.getRGB(255,0,255,.7));
-	g.drawRect(0,0,canvas.width,ktileSize);
-	grid = new Shape(g);
-	grid.x = 0;
-	grid.y = 0;
-	stage.addChild(grid);
 }

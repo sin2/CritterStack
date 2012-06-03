@@ -9,6 +9,7 @@ function startPreload(startMenu) {
 		// Main image and spaceship
 		{id:"spaceship", src:"assets/images/spaceship.png"},
 		{id:"background", src:"assets/images/background.png"},
+		{id:"tokenBar", src:"assets/images/tokenBar.png"},
 
 		// Critters
 		{id:"blue1", src:"assets/images/blue1.png"},
