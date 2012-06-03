@@ -30,105 +30,93 @@ var canvas;
 var button;
 var event1;
 
-var tokens;
-var tokenString;
-var scoreBack;
+var currentScore;
 
 var DEFAULT_FONT = "bold 24px HappyHell";
+var TOKENBAR_FONT = "bold 18px HappyHell";
 
 function init() {
 	canvas = document.getElementById('canvas');
 	stage = new Stage(canvas);
-	tokens = 0;
 
-		startPreload(function(){
-			StartMenu();
-			});
+	// Enable touch events
+	Touch.enable(stage);
+	
+	// Handle click events
+	startPreload(function(){
+		startMenu();
+	});
 }
 
-function StartMenu()
-{
+function startMenu(){
+	console.log('startMenu');
+
+	// Reset stage and start over
+	resetStage();
+	
 	displayMenu(function(){
-		StartInstructions();});
+		displayInstructions(function(){
+			startGame();
+		});
+	});
 }
 
-function StartInstructions()
-{
-	//DisplayInstructions(function(){start();});
-	start();
+function startGame() {
+	// Update background image and token bar
+	updateBackground();
+	updateTokenBar();
 
-}
-
-function start() {
-	stage.onMouseDown = function(e){
-    // Place tile
-    placeTile();
-    
-    // Cancel propagation
-    e.nativeEvent.preventDefault();
-  }
-	bounds = new Rectangle();
-	bounds.width = canvas.width;
-	bounds.height = canvas.height;
-				
-	stage = new Stage(canvas);
-//	var img = new Image();
-//		img.src = "assets/images/back3.png";
-//			img.onload = function(e){
-//			splash = new Bitmap(e.target);
-//			stage.addChild(splash);
-			
-	bgSource = new Image();
-	bgSource.src = './assets/images/background.png';
-	bgSource.name = 'bg';
-	bgSource.onload = loadGFX;		
-	
-	tokens = 10;
-	tokenBarSource = new Image();
-	tokenBarSource.src = 'assets/images/tokenBar.png';
-	tokenBarSource.name = 'tb';
-	tokenBarSource.onload = loadGFXToken;		
-	
-	switchDir = 1;
-	speed = 1;
-	tower = [];
-	towerLast = [];
-	towerLevel = 1;
-	towerSize = 5;
-	
 	// Circle is the top most sprite being animated (Need to rename...)
 	circle = ChooseSprite(towerSize);
 	circle.x = kborder;
 	circle.y = bounds.height - ktileSize*towerLevel;
 	//add the circle to the stage.
 	stage.addChildAt(circle,3);
-	
-	// Create grid	
-	//g = new Graphics();
-//	g.setStrokeStyle(1);
-//	g.beginStroke(Graphics.getRGB(0,0,0,1.0));
-//	g.drawRect(0,0, canvas.width,canvas.height);
-//	g.beginStroke(Graphics.getRGB(255,0,0,.7));
-//	for(var step = kborder;step<canvas.width;step+= 30) {
-//		g.drawRect(step,0,0,canvas.height);
-//	}
-//	for(var step = kborder;step<canvas.height;step+= 30) {
-//		g.drawRect(step,0,0,canvas.height);
-//	}
-	//g.beginStroke(Graphics.getRGB(255,0,255,.7));
-//	g.drawRect(0,0,canvas.width,ktileSize);
-//	grid = new Shape(g);
-//	grid.x = 0;
-//	grid.y = 0;
-//	stage.addChild(grid);
-	
-	
+
+	// Update stage and begin game
 	stage.update();
 	Ticker.setFPS(speed);
 	Ticker.addListener(this);// On click place tile
-  
+	
+	stage.onMouseDown = function(e){
+		// Place tile
+		placeTile();
 
+		// Cancel propagation
+		e.nativeEvent.preventDefault();
+	}
+}
 
+function resetStage(){
+	// Remove all childrens from stage
+	stage.removeAllChildren();
+	
+	// Remove ticker
+	Ticker.removeAllListeners();
+
+	// Initialize game bounds
+	bounds = new Rectangle();
+	bounds.width = canvas.width;
+	bounds.height = canvas.height;
+
+	// Initialize variables
+	currentScore = 0;
+	switchDir = 1;
+	speed = 1;
+	tower = [];
+	towerLast = [];
+	towerLevel = 1;
+	towerSize = 5;
+	stageLevel = 1;
+
+	// Delete variable from stage
+	delete stage.background;
+	delete stage.tokenBar;
+	delete stage.tokenBarText;
+
+	// Update stage
+	stage.clear();
+	stage.update();
 }
 
 function nextStage(){
@@ -136,45 +124,48 @@ function nextStage(){
 	stageLevel++;
 }
 
-function ClearAll()
-{
-	canvas.removeEventListener("mousedown", placeTile, false);
-	stage.clear();
-}
-
-
 function gameOver(){
-	var currTokens =0 ;
-for(var size = 0;size<=tower[1];size++){
-	currTokens += tower[2] * 1;//stageLevel when it works;
-	}
-	tokens+=currTokens;
-	alert("You earned " +currTokens +" tokens! You now have "+ tokens+ " tokens!");
-	ClearAll();
-	StartMenu();
+	alert("Game over!  Your score is " + currentScore);
+
+	// Go back to main menu
+	startMenu();
 }
 
+function updateBackground(){
+	// Get background from preloaded assets
+	var background = preload.getResult("background").result;
 
-function loadGFX(e){
-    if(e.target.name = 'bg'){
-    	background = new Bitmap(bgSource);
-		stageLevel = Math.floor(Math.random()*4);
-		background.y = -canvas.height*stageLevel;
-		
-    	stage.addChildAt(background,0);
-		stage.update();
+	// Load background image and add it to stage
+	if(typeof stage.background == 'undefined') {
+		console.log('stage.background loaded');
+		stage.background = new Bitmap(background);
+		stage.addChildAt(stage.background, 0);
 	}
+
+	// Offset the background based on level
+	stage.background.y = -background.height + (canvas.height * stageLevel);
+	stage.update();
 }
-function loadGFXToken(e){
-   if(e.target.name = 'tb'){
-    	bar = new Bitmap(tokenBarSource);
-		stage.addChildAt(bar, 1);
-		tokenString = new Text(tokens,"bold 18px HappyHell", "#FFFFFF");
-		tokenString.x = 32;
-		tokenString.y = 18;
-		stage.addChildAt(tokenString,2);
-		stage.update();
+
+function updateTokenBar(){
+	// Get background from preloaded assets
+	var tokenBar= preload.getResult("tokenBar").result;
+	
+	// Load tokenBar image and add it to stage
+	if(typeof stage.tokenBar == 'undefined') {
+		console.log('stage.tokenBar loaded');
+		stage.tokenBar = new Bitmap(tokenBar);
+		stage.addChildAt(stage.tokenBar, 1);
+
+		stage.tokenBarText = new Text(currentScore, TOKENBAR_FONT, "#fff");
+		stage.tokenBarText.x = 32;
+		stage.tokenBarText.y = 20;
+		stage.addChildAt(stage.tokenBarText, 2);
 	}
+	stage.tokenBarText.text = currentScore;
+
+	// Update the token bar
+	stage.update();
 }
 
 function ChooseSprite(numCritters)
@@ -248,7 +239,6 @@ document.onkeydown = function(evt) {
 
 // Called after button press/click
 function placeTile() {
-	console.log("TowerSize: "+towerSize);
 	// Save last tower placement
 	if(tower != []){
 		towerLast = tower;
@@ -259,7 +249,6 @@ function placeTile() {
 	if(checkTower() == true && towerLevel <= 14){
 		SoundJS.play("audio-critter");
 		drawTower();
-		console.log("Tower: "+tower+" TowerLast: "+towerLast);
 		if(towerLevel == 14){
 			console.log("Level Finished!");
 			nextStage();
@@ -287,6 +276,9 @@ function placeTile() {
 		circle.x = bounds.width - kborder - (ktileSize*towerSize);
 		stage.addChild(circle);
 	}
+
+	// Calculate score which is: [Current row #] * [# of Critters] * [Current stage]
+	currentScore += tower[1] * tower[2] * stageLevel;
 }
 
 // Draws previous levels placed
@@ -303,16 +295,12 @@ function drawTower() {
 // Checks placement of sprite returns false if game over
 function checkTower(){
 	if(towerLevel > 1){
-		console.log("CHECK 2: Tower: "+tower+" TowerLast: "+towerLast);
-		
 		// tower was placed perfectly
 		if(tower[0] == towerLast[0] && tower[2] == towerLast[2]){
-			console.log("Perfect");
 			return true;
 		}
 		// tower placed left of old tower
 		else if(tower[0] < towerLast[0] && tower[0]+tower[2]*ktileSize > towerLast[0]){
-			console.log("Left");
 			towerSize = ((tower[0]+tower[2]*ktileSize) - towerLast[0])/ktileSize;
 			tower = [towerLast[0], tower[1], ((tower[0]+tower[2]*ktileSize) - towerLast[0])/ktileSize];
 			redrawTopSprite();
@@ -320,7 +308,6 @@ function checkTower(){
 		}
 		// tower placed right of old tower 
 		else if(tower[0] > towerLast[0] && tower[0] < towerLast[0]+towerLast[2]*ktileSize){
-			console.log("Right");
 			towerSize = ((towerLast[0]+towerLast[2]*ktileSize) - tower[0])/ktileSize;
 			tower = [tower[0], tower[1], ((towerLast[0]+towerLast[2]*ktileSize) - tower[0])/ktileSize];
 			redrawTopSprite();
@@ -333,7 +320,7 @@ function checkTower(){
 			return false;
 		}
 	}
-	console.log("First layer");
+
 	return true;
 }
 
@@ -362,5 +349,6 @@ function tick() {
 	circle.x += switchDir * ktileSize;
 	circle.y = bounds.height - ktileSize*towerLevel;
 	
+	updateTokenBar();
 	stage.update();
 }
