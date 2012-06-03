@@ -18,6 +18,7 @@ var kcolumns = 9;
 var krows = 14;
 
 var background;
+var bgSource;
 var preload;
 var messageField;
 var stage;		
@@ -61,7 +62,10 @@ function start() {
 //			splash = new Bitmap(e.target);
 //			stage.addChild(splash);
 			
-	background = new Image();
+	bgSource = new Image();
+	bgSource.src = './assets/images/back3.png';
+	bgSource.name = 'bg';
+	bgSource.onload = loadGFX;		
 	
 	switchDir = 1;
 	speed = 1;
@@ -83,13 +87,13 @@ function start() {
 	g.beginStroke(Graphics.getRGB(0,0,0,1.0));
 	g.drawRect(0,0, canvas.width,canvas.height);
 	g.beginStroke(Graphics.getRGB(255,0,0,.7));
-	for(var step = kborder;step<canvas.width;step+= 30) {
-		g.drawRect(step,0,0,canvas.height);
-	}
-	for(var step = kborder;step<canvas.height;step+= 30) {
-		g.drawRect(step,0,0,canvas.height);
-	}
-	g.beginStroke(Graphics.getRGB(0,255,0,.7));
+//	for(var step = kborder;step<canvas.width;step+= 30) {
+//		g.drawRect(step,0,0,canvas.height);
+//	}
+//	for(var step = kborder;step<canvas.height;step+= 30) {
+//		g.drawRect(step,0,0,canvas.height);
+//	}
+	g.beginStroke(Graphics.getRGB(255,0,255,.7));
 	g.drawRect(0,0,canvas.width,ktileSize);
 	grid = new Shape(g);
 	grid.x = 0;
@@ -109,6 +113,13 @@ function nextStage(){
 
 function gameOver(){
 	// TODO
+}
+
+function loadGFX(e){
+    if(e.target.name = 'bg'){
+    	background = new Bitmap(bgSource);
+    	stage.addChildAt(background,0);
+    }  
 }
 
 function ChooseSprite()
@@ -189,18 +200,17 @@ function placeTile() {
 	tower = [circle.x,towerLevel,towerSize];
 
 	// Check the tower placement 
-	if(checkTower() == true && towerLevel <= 14){
+	if(checkTower() == true && towerLevel <= 15){
 		SoundJS.play("audio-critter");
 		drawTower();
 		console.log("Tower: "+tower+" TowerLast: "+towerLast);
-	}
-	else {
-		if(towerLevel == 14){
+		if(towerLevel == 15){
+			console.log("Level Finished!");
 			nextStage();
 		}
-		else{
-			gameOver();
-		} 
+	}
+	else {
+		gameOver();
 	}
 
 	// Increment stuff
