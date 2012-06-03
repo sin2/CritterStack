@@ -5,6 +5,7 @@ var bounds;
 var switchDir;
 var speed;
 var towerLevel;
+var stageLevel;
 var tower;
 var towerLast;
 
@@ -63,7 +64,7 @@ function start() {
 //			stage.addChild(splash);
 			
 	bgSource = new Image();
-	bgSource.src = './assets/images/back3.png';
+	bgSource.src = './assets/images/background.png';
 	bgSource.name = 'bg';
 	bgSource.onload = loadGFX;		
 	
@@ -107,8 +108,10 @@ function start() {
 	canvas.addEventListener("mousedown", placeTile, false);
 
 }
+
 function nextStage(){
 	// TODO
+	stageLevel++;
 }
 
 function gameOver(){
@@ -118,6 +121,8 @@ function gameOver(){
 function loadGFX(e){
     if(e.target.name = 'bg'){
     	background = new Bitmap(bgSource);
+		stageLevel = Math.floor(Math.random()*4);
+		background.y = -canvas.height*stageLevel;
     	stage.addChildAt(background,0);
     }  
 }
@@ -215,7 +220,7 @@ function placeTile() {
 
 	// Increment stuff
 	towerLevel++;
-	speed+= 1;
+	speed+= 0.5;
 	Ticker.setFPS(speed);
 	
 	// Every other level the animating sprite starts from the right side
