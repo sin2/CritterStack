@@ -61,7 +61,6 @@ function start() {
 //			splash = new Bitmap(e.target);
 //			stage.addChild(splash);
 			
-	
 	background = new Image();
 	
 	switchDir = 1;
@@ -71,23 +70,15 @@ function start() {
 	towerLevel = 1;
 	towerSize = 5;
 	
-
+	// Circle is the top most sprite being animated (Need to rename...)
 	circle = ChooseSprite();
 	circle.x = kborder;
 	circle.y = bounds.height - ktileSize*towerLevel;
 	//add the circle to the stage.
 	stage.addChild(circle);
-//	var g = new Graphics();
-//	g.setStrokeStyle(1);
-//	g.beginStroke(Graphics.getRGB(0,255,0,1.0));
-//	g.drawRect(0,0, ktileSize,ktileSize);
-//	var circle = new Shape(g);
-//	circle.x = kborder;
-//	circle.y = bounds.height - ktileSize*towerLevel;
-//	stage.addChild(circle);
-		
+	
+	// Create grid	
 	g = new Graphics();
-	//stroke of 1 px
 	g.setStrokeStyle(1);
 	g.beginStroke(Graphics.getRGB(0,0,0,1.0));
 	g.drawRect(0,0, canvas.width,canvas.height);
@@ -98,10 +89,11 @@ function start() {
 	for(var step = kborder;step<canvas.height;step+= 30) {
 		g.drawRect(step,0,0,canvas.height);
 	}
+	g.beginStroke(Graphics.getRGB(0,255,0,.7));
+	g.drawRect(0,0,canvas.width,ktileSize);
 	grid = new Shape(g);
 	grid.x = 0;
 	grid.y = 0;
-	//add the circle to the stage.
 	stage.addChild(grid);
 	
 	
@@ -111,162 +103,84 @@ function start() {
 	canvas.addEventListener("mousedown", placeTile, false);
 
 }
+function nextStage(){
+	// TODO
+}
+
+function gameOver(){
+	// TODO
+}
 
 function ChooseSprite()
 {
-	
+	var colour = "";
 	randomnumber=Math.floor(Math.random()*3);
-	if(randomnumber ==0)
+	switch(randomnumber)
 	{
-			// Define a spritesheet. Note that this data can be exported by Zoë.
-			var ss = new SpriteSheet({
-				"frames": {
-					"width": 30,
-					"numFrames": 2,
-					"height": 30
-				},
-				"animations": {"down": [0, 1]},
-				"images": ["assets/images/blueSprites.png"]
-			});
-
-			var circle = new BitmapAnimation(ss);
-
-			ss.getAnimation("down").frequency = 1;
-			ss.getAnimation("down").next = "down";
-			circle.gotoAndPlay("down");
-			currColour = "blue";
+	case 0:
+		colour = "blue"
+		break;
+	case 1:
+		colour = "pink"
+	  break;
+	case 2:
+		colour = "green"
+	  break;    
 	}
-	else if(randomnumber ==1)
-	{
-			// Define a spritesheet. Note that this data can be exported by Zoë.
-			var ss = new SpriteSheet({
-				"frames": {
-					"width": 30,
-					"numFrames": 2,
-					"height": 30
-				},
-				"animations": {"down": [0, 1]},
-				"images": ["assets/images/greenSprites.png"]
-			});
+	// Define a spritesheet. Note that this data can be exported by Zoë.
+	var ss = new SpriteSheet({
+		"frames": {
+			"width": 30,
+			"numFrames": 2,
+			"height": 30
+		},
+		"animations": {"down": [0, 1]},
+		"images": ["assets/images/"+colour+"Sprites.png"]
+	});
 
-			var circle = new BitmapAnimation(ss);
+	var circle = new BitmapAnimation(ss);
 
-			ss.getAnimation("down").frequency = 1;
-			ss.getAnimation("down").next = "down";
-			circle.gotoAndPlay("down");
-			currColour = "green";
-	}
-	else if(randomnumber ==2)
-	{
-			// Define a spritesheet. Note that this data can be exported by Zoë.
-			var ss = new SpriteSheet({
-				"frames": {
-					"width": 30,
-					"numFrames": 2,
-					"height": 30
-				},
-				"animations": {"down": [0, 1]},
-				"images": ["assets/images/pinkSprites.png"]
-			});
-
-			var circle = new BitmapAnimation(ss);
-
-			ss.getAnimation("down").frequency = 1;
-			ss.getAnimation("down").next = "down";
-			circle.gotoAndPlay("down");
-			currColour = "pink";
-	}
-			// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
-			return circle;
-		}
+	ss.getAnimation("down").frequency = 1;
+	ss.getAnimation("down").next = "down";
+	circle.gotoAndPlay("down");
+	currColour = colour;
+			
+	// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
+	return circle;
+}
 		
-		function ChooseTile()
+function ChooseTile()
 {
-	if(currColour == "blue"){
-			// Define a spritesheet. Note that this data can be exported by Zoë.
-			var ss = new SpriteSheet({
-				"frames": {
-					"width": 30,
-					"numFrames": 2,
-					"height": 30
-				},
-				"animations": {"down": [0, 0]},
-				"images": ["assets/images/blue1.png"]
-			});
+	// Define a spritesheet. Note that this data can be exported by Zoë.
+	var ss = new SpriteSheet({
+		"frames": {
+			"width": 30,
+			"numFrames": 2,
+			"height": 30
+		},
+		"animations": {"down": [0, 0]},
+		"images": ["assets/images/"+currColour+"1.png"]
+	});
 
-			var circle = new BitmapAnimation(ss);
+	var circle = new BitmapAnimation(ss);
 
-			ss.getAnimation("down").frequency = 1;
-			ss.getAnimation("down").next = "down";
-			circle.gotoAndPlay("down");
-			currColour = "blue";
-	}
-	else if(currColour == "green"){
-			// Define a spritesheet. Note that this data can be exported by Zoë.
-			var ss = new SpriteSheet({
-				"frames": {
-					"width": 30,
-					"numFrames": 2,
-					"height": 30
-				},
-				"animations": {"down": [0, 0]},
-				"images": ["assets/images/green1.png"]
-			});
-
-			var circle = new BitmapAnimation(ss);
-
-			ss.getAnimation("down").frequency = 1;
-			ss.getAnimation("down").next = "down";
-			circle.gotoAndPlay("down");
-			currColour = "green";
-	}
-	if(currColour == "pink"){
-			// Define a spritesheet. Note that this data can be exported by Zoë.
-			var ss = new SpriteSheet({
-				"frames": {
-					"width": 30,
-					"numFrames": 2,
-					"height": 30
-				},
-				"animations": {"down": [0, 0]},
-				"images": ["assets/images/pink1.png"]
-			});
-
-			var circle = new BitmapAnimation(ss);
-
-			ss.getAnimation("down").frequency = 1;
-			ss.getAnimation("down").next = "down";
-			circle.gotoAndPlay("down");
-			currColour = "pink";
-	}
-			// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
-			return circle;
-		}
-	
-//function handleKeyDown(e) {
-	//cross browser issues exist
-//	if(!e){ var e = window.event; }
-//	switch(e.keyCode) {
-//	case KEYCODE_SPACE: placeTile(); break;
-//	case KEYCODE_A:
-//	case KEYCODE_LEFT: lfHeld = false; break;
-//	case KEYCODE_D:
-//	case KEYCODE_RIGHT: rtHeld = false; break;
-//	case KEYCODE_W:
-//	case KEYCODE_UP: fwdHeld = false; break;
-//	}
-//}
+	ss.getAnimation("down").frequency = 1;
+	ss.getAnimation("down").next = "down";
+	circle.gotoAndPlay("down");
+	//currColour = "blue";
+	// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
+	return circle;
+}
 
 document.onkeydown = function(evt) {
   evt = evt || window.event;
 
   if(evt.keyCode == 32){
   	placeTile();
-	SoundJS.play("audio-critter");
-  	//TODO: check tower
   }
 };
 
+// Called after button press/click
 function placeTile() {
 	// Save last tower placement
 	if(tower != []){
@@ -275,7 +189,8 @@ function placeTile() {
 	tower = [circle.x,towerLevel,towerSize];
 
 	// Check the tower placement 
-	if(checkTower() == true){
+	if(checkTower() == true && towerLevel <= 14){
+		SoundJS.play("audio-critter");
 		drawTower();
 		console.log("Tower: "+tower+" TowerLast: "+towerLast);
 	}
@@ -284,8 +199,7 @@ function placeTile() {
 			nextStage();
 		}
 		else{
-			//TODO: Gameover
-		
+			gameOver();
 		} 
 	}
 
@@ -293,16 +207,17 @@ function placeTile() {
 	towerLevel++;
 	speed+= 1;
 	Ticker.setFPS(speed);
+	
+	// Every other level the animating sprite starts from the right side
 	if(towerLevel % 2 == 1){
 		circle.x = kborder;
 	}
 	else{
-		circle.x = bounds.width - kborder;
+		circle.x = bounds.width - kborder - (ktileSize*towerSize);
 	}
-	
-
 }
 
+// Draws previous levels placed
 function drawTower() {
 	for(var size = 0;size<tower[2];size++){
 		towerTiles = ChooseTile();
@@ -313,6 +228,7 @@ function drawTower() {
 
 }
 
+// Checks placement of sprite returns false if game over
 function checkTower(){
 	if(towerLevel > 1){
 		console.log("CHECK 2: Tower: "+tower+" TowerLast: "+towerLast);
@@ -327,6 +243,7 @@ function checkTower(){
 			console.log("Left");
 			towerSize = ((tower[0]+tower[2]*ktileSize) - towerLast[0])/ktileSize;
 			tower = [towerLast[0], tower[1], ((tower[0]+tower[2]*ktileSize) - towerLast[0])/ktileSize];
+			redrawTopSprite();
 			return true;		
 		}
 		// tower placed right of old tower 
@@ -339,7 +256,7 @@ function checkTower(){
 		}
 		//tower was placed completely wrong
 		else{
-			console.log("WTF");
+			console.log("Game Over");
 			return false;
 		}
 	}
@@ -347,12 +264,9 @@ function checkTower(){
 	return true;
 }
 
-function nextStage(){
-
-}
-
+// Draws top most sprite being animated
 function redrawTopSprite(){
-//stage.removeChild(circle);
+	// TODO: Redesign
 	for(var length = 0; length<tower[3];length++){
 		circle = ChooseTile();
 		circle.x = kborder+length*ktileSize;
@@ -360,35 +274,20 @@ function redrawTopSprite(){
 		//circle = new Shape(g);
 		stage.addChild(circle);
 	}
-//	g.drawRect(0,0, ktileSize,ktileSize);
-	//circle = ChooseSprite();
-	//circle.x = kborder;
-	//add the circle to the stage.
-	//stage.addChild(circle);	
 }
 
+// Called at set FPS (speed)
 function tick() {
-	if(circle.x >= bounds.width-kborder-ktileSize) {
+	// Switch sprite direction once it hits the bounds
+	if(circle.x+towerSize*ktileSize >= bounds.width-kborder) {
 		switchDir = -1;
 	}
 	else if(circle.x < kborder+ktileSize) {
 		switchDir = 1;
 	}
+	// Animate the sprite
 	circle.x += switchDir * ktileSize;
 	circle.y = bounds.height - ktileSize*towerLevel;
 	
-//	drawTower();
-//	if(checkTower() == true){
-//		stage.update();
-//	}
-//	else {
-//		if(towerLevel == 14){
-//			nextStage();
-//		}
-//		else{
-//			TODO: Gameover
-//		
-//		} 
-//	}
 	stage.update();
 }
