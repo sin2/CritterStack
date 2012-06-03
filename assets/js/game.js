@@ -48,7 +48,8 @@ function init() {
 
 function StartMenu()
 {
-	DisplayMenu(function(){StartInstructions();});
+	displayMenu(function(){
+		StartInstructions();});
 }
 
 function StartInstructions()
@@ -59,6 +60,13 @@ function StartInstructions()
 }
 
 function start() {
+	stage.onMouseDown = function(e){
+    // Place tile
+    placeTile();
+    
+    // Cancel propagation
+    e.nativeEvent.preventDefault();
+  }
 	bounds = new Rectangle();
 	bounds.width = canvas.width;
 	bounds.height = canvas.height;
@@ -117,8 +125,9 @@ function start() {
 	
 	stage.update();
 	Ticker.setFPS(speed);
-	Ticker.addListener(this);
-	canvas.addEventListener("mousedown", placeTile, false);
+	Ticker.addListener(this);// On click place tile
+  
+
 
 }
 
