@@ -36,9 +36,11 @@ function startPreload(startMenu) {
 	];
 
 	// Handle load and complete events
-	preload.onProgress = onProgress;
-	preload.onComplete = function(e)
-	{
+	preload.onProgress = function(e){
+		stage.textLoading.text = "Loading\n" + (preload.progress*100|0) + "%";
+		stage.update();
+	}
+	preload.onComplete = function(e){
 		onComplete(e, startMenu);
 	};
 
@@ -62,11 +64,6 @@ function startPreload(startMenu) {
 		// Start loading assets
 		preload.loadManifest(manifest);
 	}
-}
-
-function onProgress(e) {
-	stage.textLoading.text = "Loading\n" + (preload.progress*100|0) + "%";
-	stage.update();
 }
 
 function onComplete(e, startMenu) {

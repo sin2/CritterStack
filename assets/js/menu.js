@@ -1,5 +1,4 @@
-function displayMenu(startInstructions)
-{
+function displayMenu(displayInstructions) {
 	// Show splash image
 	stage.splashPlay = new Bitmap(preload.getResult("splash-play").result);
 	stage.addChild(stage.splashPlay);
@@ -12,15 +11,14 @@ function displayMenu(startInstructions)
 		stage.update();
 
 		// Run callback on touch
-		startInstructions();
+		displayInstructions();
 		
 		// Cancel propagation
 		e.nativeEvent.preventDefault();
 	}
 }
 
-function displayInstructions(startGame)
-{
+function displayInstructions(startGame) {
 	console.log('DisplayInstructions');
 	stage.textInstructions = new Text("Instructions Go Here.\nClick to start.", "bold 24px Arial", "#000000");
 	stage.textInstructions.textAlign = "center";
@@ -44,4 +42,27 @@ function displayInstructions(startGame)
 		// Cancel propagation
 		e.nativeEvent.preventDefault();
 	}
+}
+
+function ShowTokensEarned(tokens, returnFcn)
+{
+	canvas.onclick = null;
+	if(stage != null){
+	stage.clear();
+	}
+		messageField = new Text("You earned: " + tokens + ". Click to Continue", DEFAULT_FONT, "#000000");
+		messageField.textAlign = "center";
+		messageField.x = canvas.width / 2;
+		messageField.y = canvas.height / 4*3;
+		var img = new Image();
+		img.src = "assets/images/back3.png";
+		var tokenImg = new Image();
+		tokenImg.src = "assets/images/token.png";
+			img.onload = function(e){
+			splash = new Bitmap(e.target);
+			stage.addChild(splash, messageField);
+			}
+			stage.update();
+			
+		setTimeout(returnFcn, 3000);
 }
