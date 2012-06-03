@@ -65,23 +65,27 @@ function start() {
 	background = new Image();
 	
 	switchDir = 1;
-	speed = 3;
+	speed = 1;
 	tower = [];
 	towerLast = [];
 	towerLevel = 1;
 	towerSize = 5;
 	
-	var g = new Graphics();
-	//stroke of 1 px
-	g.setStrokeStyle(1);
-	g.beginStroke(Graphics.getRGB(255,0,0,.7));
-	g.drawRect(0,0, ktileSize,ktileSize);
+
 	circle = ChooseSprite();
 	circle.x = kborder;
 	circle.y = bounds.height - ktileSize*towerLevel;
 	//add the circle to the stage.
 	stage.addChild(circle);
-	
+//	var g = new Graphics();
+//	g.setStrokeStyle(1);
+//	g.beginStroke(Graphics.getRGB(0,255,0,1.0));
+//	g.drawRect(0,0, ktileSize,ktileSize);
+//	var circle = new Shape(g);
+//	circle.x = kborder;
+//	circle.y = bounds.height - ktileSize*towerLevel;
+//	stage.addChild(circle);
+		
 	g = new Graphics();
 	//stroke of 1 px
 	g.setStrokeStyle(1);
@@ -98,7 +102,7 @@ function start() {
 	grid.x = 0;
 	grid.y = 0;
 	//add the circle to the stage.
-	//stage.addChild(grid);
+	stage.addChild(grid);
 	
 	
 	stage.update();
@@ -311,6 +315,8 @@ function drawTower() {
 
 function checkTower(){
 	if(towerLevel > 1){
+		console.log("CHECK 2: Tower: "+tower+" TowerLast: "+towerLast);
+		
 		// tower was placed perfectly
 		if(tower[0] == towerLast[0] && tower[2] == towerLast[2]){
 			console.log("Perfect");
@@ -319,14 +325,14 @@ function checkTower(){
 		// tower placed left of old tower
 		else if(tower[0] < towerLast[0] && tower[0]+tower[2]*ktileSize > towerLast[0]){
 			console.log("Left");
-			//size = ((tower[0]+tower[2]*ktileSize) - towerLast[0] - kborder)/ktileSize
+			towerSize = ((tower[0]+tower[2]*ktileSize) - towerLast[0])/ktileSize;
 			tower = [towerLast[0], tower[1], ((tower[0]+tower[2]*ktileSize) - towerLast[0])/ktileSize];
 			return true;		
 		}
 		// tower placed right of old tower 
 		else if(tower[0] > towerLast[0] && tower[0] < towerLast[0]+towerLast[2]*ktileSize){
 			console.log("Right");
-			//size = ((towerLast[0]+towerLast[2]*ktileSize) - tower[0] - border)/ktileSize
+			towerSize = ((towerLast[0]+towerLast[2]*ktileSize) - tower[0])/ktileSize;
 			tower = [tower[0], tower[1], ((towerLast[0]+towerLast[2]*ktileSize) - tower[0])/ktileSize];
 			redrawTopSprite();
 			return true;
@@ -346,13 +352,12 @@ function nextStage(){
 }
 
 function redrawTopSprite(){
-	//stroke of 1 px
-	//g.setStrokeStyle(1);
-	//g.beginStroke(Graphics.getRGB(255,0,0,.7));
+//stage.removeChild(circle);
 	for(var length = 0; length<tower[3];length++){
-		circle = ChooseSprite();
+		circle = ChooseTile();
 		circle.x = kborder+length*ktileSize;
 		circle.y = bounds.height - ktileSize*towerLevel;
+		//circle = new Shape(g);
 		stage.addChild(circle);
 	}
 //	g.drawRect(0,0, ktileSize,ktileSize);
