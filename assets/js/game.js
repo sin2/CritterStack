@@ -250,10 +250,16 @@ function placeTile() {
 	
 	// Every other level the animating sprite starts from the right side
 	if(towerLevel % 2 == 1){
+		stage.removeChild(circle);
+		circle = ChooseSprite(towerSize);
 		circle.x = kborder;
+		stage.addChild(circle);
 	}
 	else{
+		stage.removeChild(circle);
+		circle = ChooseSprite(towerSize);
 		circle.x = bounds.width - kborder - (ktileSize*towerSize);
+		stage.addChild(circle);
 	}
 }
 
