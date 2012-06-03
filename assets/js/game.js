@@ -29,6 +29,7 @@ var splash;
 var canvas;
 var button;
 var event1;
+var playing;
 
 var currentScore;
 
@@ -65,7 +66,7 @@ function startGame() {
 	// Update background image and token bar
 	updateBackground();
 	updateTokenBar();
-
+	playing = true;
 	// Circle is the top most sprite being animated (Need to rename...)
 	circle = ChooseSprite(towerSize);
 	circle.x = kborder;
@@ -126,7 +127,7 @@ function nextStage(){
 
 function gameOver(){
 	alert("Game over!  Your score is " + currentScore);
-
+	playing = false;
 	// Go back to main menu
 	startMenu();
 }
@@ -239,6 +240,7 @@ document.onkeydown = function(evt) {
 
 // Called after button press/click
 function placeTile() {
+	
 	// Save last tower placement
 	if(tower != []){
 		towerLast = tower;
@@ -255,7 +257,9 @@ function placeTile() {
 		}
 	}
 	else {
+		
 		gameOver();
+		return false;
 	}
 
 	// Increment stuff
