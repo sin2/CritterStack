@@ -83,7 +83,7 @@ function startPreload(startMenu) {
 			}
 		}
 
-		return o.src;
+		return o.result;
 	}
 
 
@@ -118,7 +118,7 @@ function onComplete(e, startMenu) {
 	stage.removeChild(stage.textLoading);
 	
 	// Play game audio
-	playSound("audio-level-1", SoundJS.INTERRUPT_NONE, 0, 0, -1, 1);
+	stage.backgroundSound = playSound("audio-level-1", SoundJS.INTERRUPT_NONE, 0, 0, -1, 1);
 	
 	// Update stage
 	stage.update();

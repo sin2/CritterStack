@@ -81,6 +81,10 @@ function startGame() {
 	Ticker.setFPS(speed);
 	Ticker.addListener(this);// On click place tile
 	
+	// Stop playing old sound and start playing game level
+	stopSound(stage.backgroundSound);
+	stage.backgroundSound = playSound("audio-level-" + stageLevel);
+
 	stage.onMouseDown = function(e){
 		// Place tile
 		placeTile();
@@ -107,7 +111,7 @@ function resetStage(){
 	tower = [];
 	towerLast = [];
 	towerLevel = 1;
-	towerSize = 3;
+	towerSize = 5;
 	stageLevel = 1;
 
 	// Delete variable from stage
@@ -402,12 +406,13 @@ function tick() {
 // Play audio using either PhoneGap or SoundJS
 function playSound(id, interrupt, delay, offset, loop, volume, pan) {
 	var soundUrl = preload.getSound(id);
-	console.log('playSound: ' + soundUrl);
 
 	// Fallback to SoundJS playback
 	var playSoundFallback = function() {
-		console.log('playSoundFallback');
 		SoundJS.play(id, interrupt, delay, offset, loop, volume, pan);
+
+		// Return the same id to play
+		return id;
 	};
 
 	// Try playing via PhoneGap's Media api
@@ -417,21 +422,32 @@ function playSound(id, interrupt, delay, offset, loop, volume, pan) {
 			// Force full URL for android
 			"/android_asset/www/" + soundUrl,
 			function() { // onSuccess
-				console.log('onSuccess');
-				console.log(e);
 			},
 
 			function(e) { // onError
-				console.log('onError: code=' + e.code + ', message=' + e.message);
-				playSoundFallback();
 			}
 		);
 
 		// Play audio
-		console.log('playSound via Media');
 		m.play();
+
+		return m;
 	}
 	else {
-		playSoundFallback();
+		return playSoundFallback();
+	}
+}
+
+// Stop playing sound
+function stopSound(id) {
+	if(typeof id == 'undefined') { return false; }
+
+	if(typeof Media != 'undefined') {
+		if(id instanceof Media) {
+			id.stop();
+		}
+	}
+	else {
+		SoundJS.stop(id);
 	}
 }
