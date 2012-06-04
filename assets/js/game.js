@@ -82,7 +82,7 @@ function startGame() {
 	Ticker.addListener(this);// On click place tile
 	
 	// Stop playing old sound and start playing game level
-	stopSound(stage.backgroundSound);
+	stopSound(stage.backgroundSound, true);
 	stage.backgroundSound = playSound("audio-level-" + stageLevel);
 
 	stage.onMouseDown = function(e){
@@ -169,7 +169,7 @@ function StartNextLevel()
 
 function nextStage(){
 	if(stageLevel + 1 == 5) {
-	stopSound(stage.backgroundSound);
+	stopSound(stage.backgroundSound, true);
 	playSound("audio-you-win");
 		alert("You win!");
 		startMenu();
@@ -183,7 +183,7 @@ function nextStage(){
 }
 
 function gameOver(){
-	stopSound(stage.backgroundSound);
+	stopSound(stage.backgroundSound, true);
 	playSound("audio-game-over");
 	alert("Game over!  Your score is " + currentScore);
 	playing = false;
@@ -426,6 +426,9 @@ function playSound(id, interrupt, delay, offset, loop, volume, pan) {
 		return id;
 	};
 
+	// Stop the sound first just in case
+	stopSound(id);
+
 	// Try playing via PhoneGap's Media api
 	if(typeof Media != 'undefined') {
 		var m = new Media
@@ -450,12 +453,19 @@ function playSound(id, interrupt, delay, offset, loop, volume, pan) {
 }
 
 // Stop playing sound
-function stopSound(id) {
+function stopSound(id, release) {
 	if(typeof id == 'undefined') { return false; }
 
 	if(typeof Media != 'undefined') {
 		if(id instanceof Media) {
 			id.stop();
+
+			// Release the audio to free up resources
+			if(typeof release != 'undefined') {
+				if(release == true) {
+					id.release();
+				}
+			}
 		}
 	}
 	else {
