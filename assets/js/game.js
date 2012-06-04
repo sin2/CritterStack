@@ -407,7 +407,7 @@ function playSound(id, interrupt, delay, offset, loop, volume, pan) {
 	// Fallback to SoundJS playback
 	var playSoundFallback = function() {
 		console.log('playSoundFallback');
-		SoundJS.play(id, SoundJS.INTERRUPT_NONE, 0, 0, -1, 0.4)
+		SoundJS.play(id, interrupt, delay, offset, loop, volume, pan);
 	};
 
 	// Try playing via PhoneGap's Media api
