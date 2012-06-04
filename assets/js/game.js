@@ -84,9 +84,6 @@ function startGame() {
 	stage.onMouseDown = function(e){
 		// Place tile
 		placeTile();
-
-		// Cancel propagation
-		e.nativeEvent.preventDefault();
 	}
 }
 
@@ -182,7 +179,7 @@ function gameOver(){
 
 function updateBackground(){
 	// Get background from preloaded assets
-	var background = preload.getResult("background").result;
+	var background = preload.getImage("background");
 
 	// Load background image and add it to stage
 	if(typeof stage.background == 'undefined') {
@@ -198,7 +195,7 @@ function updateBackground(){
 
 function updateTokenBar(){
 	// Get background from preloaded assets
-	var tokenBar= preload.getResult("tokenBar").result;
+	var tokenBar= preload.getImage("tokenBar");
 	
 	// Load tokenBar image and add it to stage
 	if(typeof stage.tokenBar == 'undefined') {
@@ -291,7 +288,7 @@ function placeTile() {
 
 	// Check the tower placement 
 	if(checkTower() == true && towerLevel <= 15){
-		SoundJS.play("audio-critter");
+		playSound("audio-critter");
 		drawTower();
 		if(towerLevel == 15){
 			console.log("Level Finished!");
@@ -400,4 +397,41 @@ function tick() {
 	
 	updateTokenBar();
 	stage.update();
+}
+
+// Play audio using either PhoneGap or SoundJS
+function playSound(id, interrupt, delay, offset, loop, volume, pan) {
+	var soundUrl = preload.getSound(id);
+	console.log('playSound: ' + soundUrl);
+
+	// Fallback to SoundJS playback
+	var playSoundFallback = function() {
+		console.log('playSoundFallback');
+		SoundJS.play(id, SoundJS.INTERRUPT_NONE, 0, 0, -1, 0.4)
+	};
+
+	// Try playing via PhoneGap's Media api
+	if(typeof Media != 'undefined') {
+		var m = new Media
+		(
+			// Force full URL for android
+			"/android_asset/www/" + soundUrl,
+			function() { // onSuccess
+				console.log('onSuccess');
+				console.log(e);
+			},
+
+			function(e) { // onError
+				console.log('onError: code=' + e.code + ', message=' + e.message);
+				playSoundFallback();
+			}
+		);
+
+		// Play audio
+		console.log('playSound via Media');
+		m.play();
+	}
+	else {
+		playSoundFallback();
+	}
 }

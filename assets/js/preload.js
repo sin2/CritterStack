@@ -66,6 +66,27 @@ function startPreload(startMenu) {
 
 		return o.result;
 	}
+
+	// Return a sound based on id
+	preload.getSound = function(id){
+		var o = preload.getResult(id); // Try to get sound based on preload's built in method
+
+		// Fall back to manually retrieval via manifest
+		if(typeof o == 'undefined' || o == null)
+		{
+			for(var i in preload.manifest) {
+				if(preload.manifest[i].id == id) {
+					var o = preload.manifest[i];
+
+					return o.src;
+				}
+			}
+		}
+
+		return o.src;
+	}
+
+
 	// Add the loading text
 	stage.textLoading = new Text("Loading", DEFAULT_FONT, "#000000");
 	stage.textLoading.textAlign = "center";
@@ -97,7 +118,7 @@ function onComplete(e, startMenu) {
 	stage.removeChild(stage.textLoading);
 	
 	// Play game audio
-	SoundJS.play("audio-level-1", SoundJS.INTERRUPT_NONE, 0, 0, -1, 0.4);
+	playSound("audio-level-1", SoundJS.INTERRUPT_NONE, 0, 0, -1, 0.4);
 	
 	// Update stage
 	stage.update();
