@@ -35,6 +35,7 @@ function startPreload(startMenu) {
 		{id:"audio-level-3", src:"assets/audio/level_3.ogg"},
 		{id:"audio-level-4", src:"assets/audio/level_4.ogg"},
 		{id:"audio-critter", src:"assets/audio/sound_bite.ogg"},
+		{id:"audio-game-over", src:"assets/audio/game_over.ogg"},
 	];
 
 	// Handle load and complete events

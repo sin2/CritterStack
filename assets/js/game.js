@@ -181,6 +181,8 @@ function nextStage(){
 }
 
 function gameOver(){
+	stopSound(stage.backgroundSound);
+	playSound("audio-game-over");
 	alert("Game over!  Your score is " + currentScore);
 	playing = false;
 	// Go back to main menu
