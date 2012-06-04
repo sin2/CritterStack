@@ -5,7 +5,8 @@ function startPreload(startMenu) {
 	SoundJS.FlashPlugin.BASE_PATH = "assets/audio/";
 	preload.installPlugin(SoundJS);
 
-	var manifest = [
+	// Put the manifest inside preload
+	preload.manifest = [
 		// Main image and spaceship
 		{id:"spaceship", src:"assets/images/spaceship.png"},
 		{id:"background", src:"assets/images/background.png"},
@@ -29,11 +30,11 @@ function startPreload(startMenu) {
 		{id:"splash-instructions", src:"assets/images/splash-instructions.png"},
 	
 		// Game audio
-		{id:"audio-level-1", src:"assets/audio/level_1.mp3"},
-		{id:"audio-level-2", src:"assets/audio/level_2.mp3"},
-		{id:"audio-level-3", src:"assets/audio/level_3.mp3"},
-		{id:"audio-level-4", src:"assets/audio/level_4.mp3"},
-		{id:"audio-critter", src:"assets/audio/sound_bite.mp3"},
+		{id:"audio-level-1", src:"assets/audio/level_1.ogg"},
+		{id:"audio-level-2", src:"assets/audio/level_2.ogg"},
+		{id:"audio-level-3", src:"assets/audio/level_3.ogg"},
+		{id:"audio-level-4", src:"assets/audio/level_4.ogg"},
+		{id:"audio-critter", src:"assets/audio/sound_bite.ogg"},
 	];
 
 	// Handle load and complete events
@@ -45,6 +46,26 @@ function startPreload(startMenu) {
 		onComplete(e, startMenu);
 	};
 
+	// Return an image based on id
+	preload.getImage = function(id){
+		var o = preload.getResult(id); // Try to get image based on preload's built in method
+
+		// Fall back to manually retrieval via manifest
+		if(typeof o == 'undefined' || o == null)
+		{
+			for(var i in preload.manifest) {
+				if(preload.manifest[i].id == id) {
+					var o = preload.manifest[i];
+					var img = new Image();
+					img.src = o.src;
+
+					return img;
+				}
+			}
+		}
+
+		return o.result;
+	}
 	// Add the loading text
 	stage.textLoading = new Text("Loading", DEFAULT_FONT, "#000000");
 	stage.textLoading.textAlign = "center";
@@ -63,7 +84,7 @@ function startPreload(startMenu) {
 		stage.update();
 
 		// Start loading assets
-		preload.loadManifest(manifest);
+		preload.loadManifest(preload.manifest);
 	}
 }
 

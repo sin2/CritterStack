@@ -84,9 +84,6 @@ function startGame() {
 	stage.onMouseDown = function(e){
 		// Place tile
 		placeTile();
-
-		// Cancel propagation
-		e.nativeEvent.preventDefault();
 	}
 }
 
@@ -173,7 +170,7 @@ function gameOver(){
 
 function updateBackground(){
 	// Get background from preloaded assets
-	var background = preload.getResult("background").result;
+	var background = preload.getImage("background");
 
 	// Load background image and add it to stage
 	if(typeof stage.background == 'undefined') {
@@ -189,7 +186,7 @@ function updateBackground(){
 
 function updateTokenBar(){
 	// Get background from preloaded assets
-	var tokenBar= preload.getResult("tokenBar").result;
+	var tokenBar= preload.getImage("tokenBar");
 	
 	// Load tokenBar image and add it to stage
 	if(typeof stage.tokenBar == 'undefined') {

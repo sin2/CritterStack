@@ -20,6 +20,7 @@ body {
 	top: 50%;
 	margin: -240px 0 0 -160px;
 	background:#fff;
+	-webkit-tap-highlight-color: transparent;
 }
 
 div#wrapper {
