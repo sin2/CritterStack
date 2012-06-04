@@ -169,6 +169,8 @@ function StartNextLevel()
 
 function nextStage(){
 	if(stageLevel + 1 == 5) {
+	stopSound(stage.backgroundSound);
+	playSound("audio-you-win");
 		alert("You win!");
 		startMenu();
 		return false;
@@ -291,7 +293,8 @@ function ChooseTile()
 
 // Called after button press/click
 function placeTile() {
-	
+	var GOD_MODE = (getQueryString("godmode") == "1");
+
 	// Save last tower placement
 	if(tower != []){
 		towerLast = tower;
@@ -302,7 +305,7 @@ function placeTile() {
 	if(checkTower() == true && towerLevel <= 15){
 		playSound("audio-critter");
 		drawTower();
-		if(towerLevel == 15){
+		if(towerLevel >= (GOD_MODE ? 1 : 15)){
 			console.log("Level Finished!");
 			nextStage();
 			return false;
@@ -457,5 +460,18 @@ function stopSound(id) {
 	}
 	else {
 		SoundJS.stop(id);
+	}
+}
+
+function getQueryString(name) {
+	name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+	var regexS = "[\\?&]" + name + "=([^&#]*)";
+	var regex = new RegExp(regexS);
+	var results = regex.exec(window.location.search);
+	if(results == null) {
+		return "";
+	}
+	else {
+		return decodeURIComponent(results[1].replace(/\+/g, " "));
 	}
 }
