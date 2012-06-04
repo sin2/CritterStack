@@ -30,6 +30,8 @@ var canvas;
 var button;
 var event1;
 var playing;
+var scrolling;
+var transitionLevel;
 
 var currentScore;
 
@@ -102,6 +104,7 @@ function resetStage(){
 
 	// Initialize variables
 	currentScore = 0;
+	scrolling = false;
 	switchDir = 1;
 	speed = 1;
 	tower = [];
@@ -120,9 +123,45 @@ function resetStage(){
 	stage.update();
 }
 
+function StartNextLevel()
+{
+			// Remove all childrens from stage
+	stage.removeAllChildren();
+	
+	// Remove ticker
+	Ticker.removeAllListeners();
+
+	// Initialize game bounds
+	bounds = new Rectangle();
+	bounds.width = canvas.width;
+	bounds.height = canvas.height;
+
+	updateTokenBar();
+	scrolling = false;
+	switchDir = 1;
+	speed = 1;
+	transitionLevel = [transitionLevel[0], 1, transitionLevel[2]];
+	tower = transitionLevel;
+	towerLast = [];
+	towerLevel = 2;
+	towerSize = transitionLevel[2];
+	drawTower();
+
+	// Delete variable from stage
+	delete stage.background;
+	delete stage.tokenBar;
+
+	// Update stage
+	stage.clear();
+	stage.update();
+	startGame();
+}
+
 function nextStage(){
 	// TODO
 	stageLevel++;
+	transitionLevel = tower;
+	StartNextLevel();	
 }
 
 function gameOver(){
@@ -248,12 +287,13 @@ function placeTile() {
 	tower = [circle.x,towerLevel,towerSize];
 
 	// Check the tower placement 
-	if(checkTower() == true && towerLevel <= 14){
+	if(checkTower() == true && towerLevel <= 15){
 		SoundJS.play("audio-critter");
 		drawTower();
-		if(towerLevel == 14){
+		if(towerLevel == 15){
 			console.log("Level Finished!");
 			nextStage();
+			return false;
 		}
 	}
 	else {
@@ -264,7 +304,7 @@ function placeTile() {
 
 	// Increment stuff
 	towerLevel++;
-	speed+= 0.5;
+	speed+= 0.4+ 0.1*stageLevel;
 	Ticker.setFPS(speed);
 	
 	// Every other level the animating sprite starts from the right side
@@ -342,6 +382,8 @@ function redrawTopSprite(){
 
 // Called at set FPS (speed)
 function tick() {
+	
+		
 	// Switch sprite direction once it hits the bounds
 	if(circle.x+towerSize*ktileSize >= bounds.width-kborder) {
 		switchDir = -1;
