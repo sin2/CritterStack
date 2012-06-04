@@ -110,7 +110,7 @@ function resetStage(){
 	tower = [];
 	towerLast = [];
 	towerLevel = 1;
-	towerSize = 3;
+	towerSize = 5;
 	stageLevel = 1;
 
 	// Delete variable from stage
@@ -127,7 +127,7 @@ function StartNextLevel()
 {
 			// Remove all childrens from stage
 	stage.removeAllChildren();
-	document.onkeydown = null;
+	
 	// Remove ticker
 	Ticker.removeAllListeners();
 
