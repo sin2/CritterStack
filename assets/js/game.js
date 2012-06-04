@@ -168,10 +168,16 @@ function StartNextLevel()
 }
 
 function nextStage(){
-	// TODO
-	stageLevel++;
-	transitionLevel = tower;
-	StartNextLevel();	
+	if(stageLevel + 1 == 5) {
+		alert("You win!");
+		startMenu();
+		return false;
+	}
+	else {
+		stageLevel++;
+		transitionLevel = tower;
+		StartNextLevel();	
+	}
 }
 
 function gameOver(){
