@@ -1,6 +1,6 @@
 function displayMenu(displayInstructions) {
 	// Show splash image
-	stage.splashPlay = new Bitmap(preload.getImage("splash-play"));
+	stage.splashPlay = new Bitmap(preload.getResult("splash-play").result);
 	stage.addChild(stage.splashPlay);
 	stage.update();
 		
@@ -11,6 +11,9 @@ function displayMenu(displayInstructions) {
 		stage.update();
 		// Run callback on touch
 		displayInstructions();
+		
+		// Cancel propagation
+		e.nativeEvent.preventDefault();
 	}
 }
 
@@ -22,7 +25,7 @@ function displayInstructions(startGame) {
 	stage.textInstructions.y = canvas.height / 3*2-40;
 
 	// Show instructions
-	stage.splashInstructions = new Bitmap(preload.getImage("splash-instructions"));
+	stage.splashInstructions = new Bitmap(preload.getResult("splash-instructions").result);
 	stage.addChild(stage.splashInstructions, stage.textInstructions);
 	stage.update();
 
@@ -34,5 +37,8 @@ function displayInstructions(startGame) {
 
 		// Run callback on touch
 		startGame();
+		
+		// Cancel propagation
+		e.nativeEvent.preventDefault();
 	}
 }

@@ -84,6 +84,9 @@ function startGame() {
 	stage.onMouseDown = function(e){
 		// Place tile
 		placeTile();
+
+		// Cancel propagation
+		e.nativeEvent.preventDefault();
 	}
 }
 
@@ -107,7 +110,7 @@ function resetStage(){
 	tower = [];
 	towerLast = [];
 	towerLevel = 1;
-	towerSize = 5;
+	towerSize = 3;
 	stageLevel = 1;
 
 	// Delete variable from stage
@@ -136,7 +139,16 @@ function StartNextLevel()
 	updateTokenBar();
 	scrolling = false;
 	switchDir = 1;
-	speed = 1;
+	switch(stageLevel)
+	{
+		case 2:
+			speed = 3;
+		case 3:
+			speed = 7;
+		default:
+			speed = 10;	
+	}
+	
 	transitionLevel = [transitionLevel[0], 1, transitionLevel[2]];
 	tower = transitionLevel;
 	towerLast = [];
@@ -170,7 +182,7 @@ function gameOver(){
 
 function updateBackground(){
 	// Get background from preloaded assets
-	var background = preload.getImage("background");
+	var background = preload.getResult("background").result;
 
 	// Load background image and add it to stage
 	if(typeof stage.background == 'undefined') {
@@ -186,7 +198,7 @@ function updateBackground(){
 
 function updateTokenBar(){
 	// Get background from preloaded assets
-	var tokenBar= preload.getImage("tokenBar");
+	var tokenBar= preload.getResult("tokenBar").result;
 	
 	// Load tokenBar image and add it to stage
 	if(typeof stage.tokenBar == 'undefined') {
@@ -295,7 +307,7 @@ function placeTile() {
 
 	// Increment stuff
 	towerLevel++;
-	speed+= 0.4+ 0.1*stageLevel;
+	speed+=1;
 	Ticker.setFPS(speed);
 	
 	// Every other level the animating sprite starts from the right side
