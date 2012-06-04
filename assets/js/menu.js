@@ -19,10 +19,10 @@ function displayMenu(displayInstructions) {
 
 function displayInstructions(startGame) {
 	console.log('DisplayInstructions');
-	stage.textInstructions = new Text("Instructions Go Here.\nClick to start.", DEFAULT_FONT, "#000000");
+	stage.textInstructions = new Text("Help the critters\nreach their spaceship!\nClick to stack the critters as \nhigh as you can!\n\nClick to start.", DEFAULT_FONT, "#000000");
 	stage.textInstructions.textAlign = "center";
 	stage.textInstructions.x = canvas.width / 2;
-	stage.textInstructions.y = canvas.height / 4*3;
+	stage.textInstructions.y = canvas.height / 3*2-40;
 
 	// Show instructions
 	stage.splashInstructions = new Bitmap(preload.getResult("splash-instructions").result);

@@ -110,7 +110,7 @@ function resetStage(){
 	tower = [];
 	towerLast = [];
 	towerLevel = 1;
-	towerSize = 5;
+	towerSize = 3;
 	stageLevel = 1;
 
 	// Delete variable from stage
@@ -127,7 +127,7 @@ function StartNextLevel()
 {
 			// Remove all childrens from stage
 	stage.removeAllChildren();
-	
+	document.onkeydown = null;
 	// Remove ticker
 	Ticker.removeAllListeners();
 
@@ -269,13 +269,7 @@ function ChooseTile()
 	return circle;
 }
 
-document.onkeydown = function(evt) {
-  evt = evt || window.event;
 
-  if(evt.keyCode == 32){
-  	placeTile();
-  }
-};
 
 // Called after button press/click
 function placeTile() {
