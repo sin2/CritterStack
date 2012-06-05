@@ -186,6 +186,17 @@ function gameOver(){
 	stopSound(stage.backgroundSound, true);
 	playSound("audio-game-over");
 	alert("Game over!  Your score is " + currentScore);
+	
+	var name = prompt("Enter your name for the highscores!");
+	while(name ==null || name == "")
+	{
+		name = prompt("You forgot to enter a name!");
+	}
+	$.post('insert.php', {name: name, score:currentScore, level: stageLevel, towerHeight:towerLast[2], password:"SinthushanIsLame"}, function(){
+
+          }).error(function(){
+            alert('error... ohh no!');
+          });
 	playing = false;
 	// Go back to main menu
 	startMenu();
