@@ -170,7 +170,7 @@ function StartNextLevel()
 function nextStage(){
 	if(stageLevel + 1 == 5) {
 	stopSound(stage.backgroundSound, true);
-	playSound("audio-you-win");
+	playSound("audio-you-win", true);
 		alert("You win!");
 		startMenu();
 		return false;
@@ -184,19 +184,23 @@ function nextStage(){
 
 function gameOver(){
 	stopSound(stage.backgroundSound, true);
-	playSound("audio-game-over");
+	playSound("audio-game-over", true);
 	alert("Game over!  Your score is " + currentScore);
 	
-	var name = prompt("Enter your name for the highscores!");
-	while(name ==null || name == "")
-	{
-		name = prompt("You forgot to enter a name!");
-	}
-	$.post('insert.php', {name: name, score:currentScore, level: stageLevel, towerHeight:towerLast[2], password:"SinthushanIsLame"}, function(){
+	// Ignore on PhoneGap.  TODO: Needs better implementation
+	if(typeof Media == 'undefined') {
+		var name = prompt("Enter your name for the highscores!");
+		while(name ==null || name == "")
+		{
+			name = prompt("You forgot to enter a name!");
+		}
+		$.post('insert.php', {name: name, score:currentScore, level: stageLevel, towerHeight:towerLast[2], password:"SinthushanIsLame"}, function(){
 
-          }).error(function(){
-            alert('error... ohh no!');
-          });
+			  }).error(function(){
+				alert('error... ohh no!');
+			  });
+	}
+
 	playing = false;
 	// Go back to main menu
 	startMenu();
@@ -314,7 +318,15 @@ function placeTile() {
 
 	// Check the tower placement 
 	if(checkTower() == true && towerLevel <= 15){
-		playSound("audio-critter");
+		
+		// Prevent re-creation of critter sound everytime.  Caused resource leak on PhoneGap.
+		if(typeof stage.critterSound == 'undefined') {
+			stage.critterSound = playSound("audio-critter");
+		}
+		else {
+			playSound(stage.critterSound);
+		}
+
 		drawTower();
 		if(towerLevel >= (GOD_MODE ? 1 : 15)){
 			console.log("Level Finished!");
@@ -427,8 +439,6 @@ function tick() {
 
 // Play audio using either PhoneGap or SoundJS
 function playSound(id, interrupt, delay, offset, loop, volume, pan) {
-	var soundUrl = preload.getSound(id);
-
 	// Fallback to SoundJS playback
 	var playSoundFallback = function() {
 		SoundJS.play(id, interrupt, delay, offset, loop, volume, pan);
@@ -442,16 +452,23 @@ function playSound(id, interrupt, delay, offset, loop, volume, pan) {
 
 	// Try playing via PhoneGap's Media api
 	if(typeof Media != 'undefined') {
-		var m = new Media
-		(
-			// Force full URL for android
-			"/android_asset/www/" + soundUrl,
-			function() { // onSuccess
-			},
+		var m = null;
 
-			function(e) { // onError
-			}
-		);
+		if(id instanceof Media) {
+			m = id;
+		}
+		else {
+			m = new Media
+			(
+				// Force full URL for android
+				"/android_asset/www/" + preload.getSound(id),
+				function() { // onSuccess
+				},
+
+				function(e) { // onError
+				}
+			);
+		}
 
 		// Play audio
 		m.play();

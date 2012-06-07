@@ -113,7 +113,6 @@ function startPreload(startMenu) {
 
 function onComplete(e, startMenu) {
 	console.log('preload.onComplete');
-	console.log(e);
 
 	// Remove splash and text and update stage
 	stage.removeChild(stage.splashLoading);
